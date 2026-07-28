@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "CorredorPolones",
-    "project_version":    "d811f08",
+    "project_version":    "e90e978-dirty",
     "project_path":       "C:/Users/Samuel/Desktop/Profissional/3_IFnite/2026/CorredorPolones/CorredorPolones",
     "idf_path":           "C:/Users/Samuel/esp/v5.5.1/esp-idf",
     "build_dir":          "C:/Users/Samuel/Desktop/Profissional/3_IFnite/2026/CorredorPolones/CorredorPolones/build",
