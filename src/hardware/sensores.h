@@ -7,7 +7,7 @@
 #define SensorDireita 22
 #define SensorEsquerda 36
 
-class Sensors
+class sensores
 {
 public:
     void begin();
