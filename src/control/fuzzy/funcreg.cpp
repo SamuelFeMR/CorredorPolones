@@ -24,3 +24,5 @@ VGRP = trapmf(varerro,1500,2000,3500,3500);
 }
 
 //Regras (25 regras)
+
+float regra1 = min(EGRN,VGRN);

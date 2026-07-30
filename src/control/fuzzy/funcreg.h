@@ -13,5 +13,5 @@ float VGRN, VPQN, VZER, VPQP, VGRP;
 
 struct RegrasSaida
 {
-    float baixacw, altacw, zero, baixacc, altacc;
+    float mesquerda, esquerda, zero, direita, mdireita;
 }
