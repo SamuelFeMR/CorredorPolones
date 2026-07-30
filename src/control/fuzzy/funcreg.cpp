@@ -8,7 +8,7 @@ EGRP = Trapezoidal      VGRP = Trapezoidal
 #include funcreg.h
 #include func.h
 
-EGRN = trapmf()
+EGRN = trapmf();
 EPQN =
 EZER =
 EPQP =
