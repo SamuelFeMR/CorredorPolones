@@ -17,4 +17,12 @@ class Inferencia
 {
 public:
     saidaFuzzy executar(const entradaFuzzy& entrada);
+    
+    float fullCW(float x);
+    float altoCW(float x);
+    float baixoCW(float x);
+    float centro(float x);
+    float baixoCC(float x);
+    float altoCC(float x);
+    float fullCC(float x);
 };

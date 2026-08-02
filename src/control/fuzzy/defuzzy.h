@@ -28,7 +28,7 @@ Com esse conjunto de pertinências realizamos a inferência nebulosa a partir do
 Nossas saídas nebulosas serão defuzzyficadas como PWMs para os dois motores
 
 Saidas nebulosas:
--Virar completamente pra direita
+-Virar completamente pra direita 
 -Virar muito pra direita
 -Virar pouco pra direita
 -Centralizar
@@ -50,16 +50,17 @@ class defuzzy
 {
 public:
 
-    float centroide(const aidaFuzzy& regras);
-    float meanMax(const aidaFuzzy& regras);
+    float pwmMotorEsq(const saidaFuzzy& regras, const Inferencia& inf);
+    float pwmMotorDir(const saidaFuzzy& regras, const Inferencia& inf);
 
 private:
+
+    float centroideEsq(const saidaFuzzy& regras, const Inferencia& inf);
+    float centroideDir(const saidaFuzzy& regras, const Inferencia& inf);
+
+
     
-    float fullCW(float x);
-    float altoCW(float x);
-    float baixoCW(float x);
-    float centro(float x);
-    float baixoCC(float x);
-    float altoCC(float x);
-    float fullCC(float x);
+    float meanMaxEsq(const saidaFuzzy& regras);
+    float meanMaxDir(const saidaFuzzy& regras);
+
 };
