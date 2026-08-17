@@ -23,38 +23,55 @@ VPQP = trimf(varerro,500,1125,1750);
 VGRP = trapmf(varerro,1500,2000,3500,3500);
 }
 
-//Regras (25 regras)
+//Regras (25 regras)   ERRO DEPOIS VARIAÇÃO
 
-float regra1 = min(EGRN,VGRN);
-float regra2 = min(EGRN,VPQN);
-float regra3 = min(EGRN,VZER);
-float regra4 = min(EGRN,VPQP);
-float regra5 = min(EGRN,VGRP);
-float regra6 = min(EPQN,VGRN);
-float regra7 = min(EPQN,VPQN);
-float regra8 = min(EPQN,VZER);
-float regra9 = min(EPQN,VPQP);
-float regra10 = min(EPQN,VGRP);
-float regra11 = min(EZER,VGRN);
-float regra12 = min(EZER,VPQN);
-float regra13 = min(EZER,VZER);
-float regra14 = min(EZER,VPQP);
-float regra15 = min(EZER,VGRP);
-float regra16 = min(EPQP,VGRN);
-float regra17 = min(EPQP,VPQN);
-float regra18 = min(EPQP,VZER);
-float regra19 = min(EPQP,VPQP);
-float regra20 = min(EPQP,VGRP);
-float regra21 = min(EGRP,VGRN);
-float regra22 = min(EGRP,VPQN);
-float regra23 = min(EGRP,VZER);
-float regra24 = min(EGRP,VPQP);
-float regra25 = min(EGRP,VGRP);
+float regra1 = min(EGRN,VGRN); //VCD
+float regra2 = min(EGRN,VPQN); //VCD
+float regra3 = min(EGRN,VZER); //VMD
+float regra4 = min(EGRN,VPQP); //VPD
+float regra5 = min(EGRN,VGRP); //VPD
+float regra6 = min(EPQN,VGRN); //VCD
+float regra7 = min(EPQN,VPQN); //VMD
+float regra8 = min(EPQN,VZER); //VPD
+float regra9 = min(EPQN,VPQP); //CENTRAL
+float regra10 = min(EPQN,VGRP); //VPD
+float regra11 = min(EZER,VGRN); //VMD
+float regra12 = min(EZER,VPQN); //VPD
+float regra13 = min(EZER,VZER); //CENTRAL
+float regra14 = min(EZER,VPQP); //VPE
+float regra15 = min(EZER,VGRP); //VME
+float regra16 = min(EPQP,VGRN); //VPE
+float regra17 = min(EPQP,VPQN); //CENTRAL
+float regra18 = min(EPQP,VZER); //VPE
+float regra19 = min(EPQP,VPQP); //VME
+float regra20 = min(EPQP,VGRP); //VCE
+float regra21 = min(EGRP,VGRN); //VPD
+float regra22 = min(EGRP,VPQN); //VPE
+float regra23 = min(EGRP,VZER); //VME
+float regra24 = min(EGRP,VPQP); //VCE
+float regra25 = min(EGRP,VGRP); //VCE
 
-FullCW = max(regra1,regra2,regra3,regra4,regra5);  //Fazer max do max e corrigir as regras correspondentes
-AltoCW = max(regra6,regra7,regra8,regra9,regra10);
-BaixoCW = max(regra11,regra12,regra13,regra14,regra15);
-Centro = max(regra16,regra17,regra18,regra19,regra20);
-BaixoCC = max(regra21,regra22,regra23,regra24,regra25);
-AltoCC = max(regra21,regra22,regra23,regra24,regra25);
-FullCC = max(regra21,regra22,regra23,regra24,regra25);
+    VCD = 0.0;
+    VMD = 0.0;
+    VPD = 0.0;
+    CEN = 0.0;
+    VPE = 0.0;
+    VME = 0.0;
+    VCE = 0.0;
+/*
+VCD = max(regra6,max(regra2,regra1));  //Fazer max do max e corrigir as regras correspondentes
+VMD = max(regra1,max(regra2,max(regra3,max(regra4,regra5))));
+VPD = max(regra1,max(regra2,max(regra3,max(regra4,regra5))));
+CEN = max(regra1,max(regra2,max(regra3,max(regra4,regra5))));
+VPE = max(regra1,max(regra2,max(regra3,max(regra4,regra5))));
+VME = max(regra1,max(regra2,max(regra3,max(regra4,regra5))));
+VCE = max(regra1,max(regra2,max(regra3,max(regra4,regra5))));
+*/
+
+VCD = max(regra1, max(regra2, regra6));  //1,2,6
+VMD = max(regra3, max(regra7, regra11));  //3,7,11
+VPD = max(regra4, max(regra5, max(regra8, max(regra10, max(regra12, regra21)))));  //4,5,8,10,12,21
+CEN = max(regra9, max(regra13, regra17));  //9,13,17
+VPE = max(regra14, max(regra16, max(regra18, regra22)));  //14,16,18,22
+VME = max(regra15, max(regra19, regra23));  //15,19,23
+VCE = max(regra20, max(regra24, regra25));  //20,24,25
