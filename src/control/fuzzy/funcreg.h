@@ -12,12 +12,12 @@ struct saidaFuzzy
     float VPE = 0;
     float VME  = 0;
     float VCE = 0;
-    }
+    };
 
 class fuzzy
 {
 public:
-    void funcoes(float erro, float varerro0);
+    saidaFuzzy funcoes(float erro, float varerro0);
     
 private:
       // Funções de pertinência do erro
