@@ -44,7 +44,7 @@ Defuzzificação:
 #pragma once
 
 #include <Arduino.h>
-#include "inferencia.h"
+#include "funcreg.h"
 
 class defuzzy
 {
