@@ -2,11 +2,9 @@
 
 #include <Arduino.h>
 
-class fuzzy
-{
-public:
-    void funcoes(float erro, float varerro0);
 
+struct saidaFuzzy
+    {
     float VCD = 0;
     float VMD  = 0;
     float VPD = 0;
@@ -14,6 +12,13 @@ public:
     float VPE = 0;
     float VME  = 0;
     float VCE = 0;
+    }
+
+class fuzzy
+{
+public:
+    void funcoes(float erro, float varerro0);
+    
 private:
       // Funções de pertinência do erro
     float EGRN = 0.0;
