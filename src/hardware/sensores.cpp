@@ -1,6 +1,6 @@
 #include "sensores.h"
 
-void begin()sensores::
+void sensores::begin()
 {
     pinMode(2, OUTPUT);
     pinMode(SensorDireita, INPUT);

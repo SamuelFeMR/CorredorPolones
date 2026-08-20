@@ -1,4 +1,4 @@
-#include func.h
+#include "func.h"
 
 float trimf(float x, float a, float b, float c)
 {

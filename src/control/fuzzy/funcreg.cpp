@@ -21,7 +21,7 @@ VPQN = trimf(varerro,-1750,-1125,-500);
 VZER = trimf(varerro,-700,0,700);
 VPQP = trimf(varerro,500,1125,1750);
 VGRP = trapmf(varerro,1500,2000,3500,3500);
-}
+
 
 //Regras (25 regras)   ERRO DEPOIS VARIAÇÃO
 
@@ -75,3 +75,4 @@ CEN = max(regra9, max(regra13, regra17));  //9,13,17
 VPE = max(regra14, max(regra16, max(regra18, regra22)));  //14,16,18,22
 VME = max(regra15, max(regra19, regra23));  //15,19,23
 VCE = max(regra20, max(regra24, regra25));  //20,24,25
+}

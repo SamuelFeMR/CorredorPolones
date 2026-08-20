@@ -14,8 +14,8 @@ public:
     void calibrate();
 
     void update();
-    void direitaDetected();
-    void esquerdaDetected();
+    bool direitaDetected() const;
+    bool esquerdaDetected() const;
 
     int calculaErro() const;
 
