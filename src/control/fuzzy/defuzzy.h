@@ -50,17 +50,17 @@ class defuzzy
 {
 public:
 
-    float pwmMotorEsq(const saidaFuzzy& regras, const Inferencia& inf);
-    float pwmMotorDir(const saidaFuzzy& regras, const Inferencia& inf);
+    float pwmMotorEsq(const valoresFuzzy& regras);
+    float pwmMotorDir(const valoresFuzzy& regras);
 
 private:
 
-    float centroideEsq(const saidaFuzzy& regras, const Inferencia& inf);
-    float centroideDir(const saidaFuzzy& regras, const Inferencia& inf);
+    float centroideEsq(const valoresFuzzy& regras);
+    float centroideDir(const valoresFuzzy& regras);
 
 
     
-    float meanMaxEsq(const saidaFuzzy& regras);
-    float meanMaxDir(const saidaFuzzy& regras);
+    float meanMaxEsq(const valoresFuzzy& regras);
+    float meanMaxDir(const valoresFuzzy& regras);
 
 };

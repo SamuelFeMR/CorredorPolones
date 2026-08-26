@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 
-struct saidaFuzzy
+struct valoresFuzzy
     {
     float VCD = 0;
     float VMD  = 0;

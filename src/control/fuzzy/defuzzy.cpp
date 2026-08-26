@@ -1,17 +1,16 @@
 #include "defuzzy.h"
 
-float defuzzy::pwmMotorEsq(const saidaFuzzy& regras, const Inferencia& inf)
+float defuzzy::pwmMotorEsq(const valoresFuzzy& regras)
 {
-    return centroideEsq(regras, inf);
+    return centroideEsq(regras);
 }
 
-float defuzzy::pwmMotorDir(const saidaFuzzy& regras, const Inferencia& inf)
+float defuzzy::pwmMotorDir(const valoresFuzzy& regras)
 {
-    return centroideDir(regras, inf);
+    return centroideDir(regras);
 }
 
-float defuzzy::centroideEsq(const saidaFuzzy& regras,
-                            const Inferencia& inf)
+float defuzzy::centroideEsq(const valoresFuzzy& regras)
 {
     float numerador = 0.0f;
     float denominador = 0.0f;
@@ -48,8 +47,7 @@ float defuzzy::centroideEsq(const saidaFuzzy& regras,
     return numerador / denominador;
 }
 
-float defuzzy::centroideDir(const saidaFuzzy& regras,
-                            const Inferencia& inf)
+float defuzzy::centroideDir(const valoresFuzzy& regras)
 {
     float numerador = 0.0f;
     float denominador = 0.0f;
@@ -86,7 +84,7 @@ float defuzzy::centroideDir(const saidaFuzzy& regras,
     return numerador / denominador;
 }
 
-float defuzzy::meanMaxEsq(const saidaFuzzy& regras)
+float defuzzy::meanMaxEsq(const valoresFuzzy& regras)
 {
     const float centros[7] =
     {
@@ -134,7 +132,7 @@ float defuzzy::meanMaxEsq(const saidaFuzzy& regras)
     return soma / quantidade;
 }
 
-float defuzzy::meanMaxDir(const saidaFuzzy& regras)
+float defuzzy::meanMaxDir(const valoresFuzzy& regras)
 {
     const float centros[7] =
     {
