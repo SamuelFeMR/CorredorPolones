@@ -17,7 +17,7 @@ struct valoresFuzzy
 class fuzzy
 {
 public:
-    saidaFuzzy funcoes(float erro, float varerro0);
+    valoresFuzzy funcoes(float erro, float varerro0);
     
 private:
       // Funções de pertinência do erro

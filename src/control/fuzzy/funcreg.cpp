@@ -1,7 +1,7 @@
 #include <funcreg.h>
 #include <func.h>
 
-saidaFuzzy fuzzy::funcoes(float erro, float varerro)
+valoresFuzzy fuzzy::funcoes(float erro, float varerro)
 {
     valoresFuzzy saida;
     EGRN = trapmf(erro,-3500,-3500,-2000,-1500); //analisar na calibragem do sensor se os valores estao corretos
