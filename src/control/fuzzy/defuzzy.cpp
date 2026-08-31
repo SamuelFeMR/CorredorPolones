@@ -1,8 +1,6 @@
 #include "defuzzy.h"
 
-void defuzzy::calcularPWM(
-    const valoresFuzzy& regras,
-    float base)
+void defuzzy::calcularPWM(const valoresFuzzy& regras,float base)
 {
     base = constrain(base, 0.0f, 255.0f);
 
@@ -38,13 +36,21 @@ float defuzzy::centroide(const valoresFuzzy& regras)
     {
         float mu = 0.0f;
 
-        float fullCW  = trapmf(pwm, -255, 230, 20, 50);
-        float altoCW  = trimf(pwm, 40, 75, 110);
-        float baixoCW = trimf(pwm, 80, 115, 145);
-        float centro  = trimf(pwm, 115, 145, 175);
-        float baixoCC = trimf(pwm, 145, 180, 210);
-        float altoCC  = trimf(pwm, 180, 210, 240);
-        float fullCC  = trapmf(pwm, 220, 240, 255, 255);
+        // -------------------------------
+        // Correção para a DIREITA
+        float fullCD  = trapmf(pwm, 170, 220, 255, 255);
+        float altoCD  = trimf(pwm, 100, 170, 220);
+        float baixoCD = trimf(pwm, 0, 80, 140);
+
+        // -------------------------------
+        // Centro
+        float centro = trimf(pwm, -40, 0, 40);
+
+        // -------------------------------
+        // Correção para a ESQUERDA
+        float baixoCE = trimf(pwm, -140, -80, 0);
+        float altoCE  = trimf(pwm, -220, -170, -100);
+        float fullCE  = trapmf(pwm, -255, -255, -220, -170);
 
         mu = max(mu, min(regras.VCD, fullCW));
         mu = max(mu, min(regras.VMD, altoCW));
@@ -59,15 +65,9 @@ float defuzzy::centroide(const valoresFuzzy& regras)
     }
 
     if (denominador == 0.0f)
-        return 0;
+        return 0.0f;
 
-    float pwmFuzzy = numerador / denominador;
-    
-    //Normalizando o valor de correção para o intervalo correto
-    correcao = (base/255) * pwmFuzzy;
-
-
-    return correcao;
+    return numerador / denominador;
 }
 
 float defuzzy::meanMaxEsq(const valoresFuzzy& regras)

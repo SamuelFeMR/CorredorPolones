@@ -1,3 +1,8 @@
+#pragma once
+
+#include <Arduino.h>
+#include "funcreg.h"
+
 class defuzzy
 {
 public:
