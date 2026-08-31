@@ -64,13 +64,13 @@ float defuzzy::centroide(const valoresFuzzy& regras)
         float altoCE  = trimf(pwm, -220, -170, -100);
         float fullCE  = trapmf(pwm, -255, -255, -220, -170);
 
-        mu = max(mu, min(regras.VCD, fullCW));
-        mu = max(mu, min(regras.VMD, altoCW));
-        mu = max(mu, min(regras.VPD, baixoCW));
+        mu = max(mu, min(regras.VCD, fullCD));
+        mu = max(mu, min(regras.VMD, altoCD));
+        mu = max(mu, min(regras.VPD, baixoCD));
         mu = max(mu, min(regras.CEN, centro));
-        mu = max(mu, min(regras.VPE, baixoCC));
-        mu = max(mu, min(regras.VME, altoCC));
-        mu = max(mu, min(regras.VCE, fullCC));
+        mu = max(mu, min(regras.VPE, baixoCE));
+        mu = max(mu, min(regras.VME, altoCE));
+        mu = max(mu, min(regras.VCE, fullCE));
 
         numerador += pwm * mu;
         denominador += mu;
