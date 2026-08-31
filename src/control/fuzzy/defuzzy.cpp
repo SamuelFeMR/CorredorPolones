@@ -29,6 +29,18 @@ void defuzzy::calcularPWM(const valoresFuzzy& regras,float base)
 
 float defuzzy::centroide(const valoresFuzzy& regras)
 {
+
+    /*
+        Universo da saída:
+
+        -255                0                +255
+          |----------------|----------------|
+        esquerda          centro            direita
+
+        A saída fuzzy representa CORREÇÃO,
+        não PWM absoluto.
+    */
+
     float numerador = 0.0f;
     float denominador = 0.0f;
 
@@ -70,17 +82,31 @@ float defuzzy::centroide(const valoresFuzzy& regras)
     return numerador / denominador;
 }
 
-float defuzzy::meanMaxEsq(const valoresFuzzy& regras)
+float defuzzy::meanMax(const valoresFuzzy& regras)
 {
+    /*
+        Mean of Maximum.
+
+        Os centros representam CORREÇÃO:
+
+        VCD = +255
+        VMD = +170
+        VPD = +80
+        CEN = 0
+        VPE = -80
+        VME = -170
+        VCE = -255
+    */
+
     const float centros[7] =
     {
-        255,
-        200,
-        200,
-        230,
-        170,
-        150,
-        0
+        255.0f,
+        170.0f,
+        80.0f,
+        0.0f,
+        -80.0f,
+        -170.0f,
+        -255.0f
     };
 
     const float ativacao[7] =
@@ -96,72 +122,36 @@ float defuzzy::meanMaxEsq(const valoresFuzzy& regras)
 
     float maior = 0.0f;
 
-    for(int i = 0; i < 7; i++)
-        if(ativacao[i] > maior)
+    for (int i = 0; i < 7; i++)
+    {
+        if (ativacao[i] > maior)
             maior = ativacao[i];
+    }
+
+    if (maior <= 0.0f)
+        return 0.0f;
 
     float soma = 0.0f;
     int quantidade = 0;
 
-    for(int i = 0; i < 7; i++)
+    const float tolerancia = 0.0001f;
+
+    for (int i = 0; i < 7; i++)
     {
-        if(ativacao[i] == maior)
+        if (fabs(ativacao[i] - maior) < tolerancia)
         {
             soma += centros[i];
             quantidade++;
         }
     }
 
-    if(quantidade == 0)
-        return 0;
+    if (quantidade == 0)
+        return 0.0f;
 
     return soma / quantidade;
 }
 
-float defuzzy::meanMaxDir(const valoresFuzzy& regras)
+float defuzzy::getCorrecao() const
 {
-    const float centros[7] =
-    {
-        0,
-        140,
-        180,
-        230,
-        200,
-        200,
-        255
-    };
-
-    const float ativacao[7] =
-    {
-        regras.VCD,
-        regras.VMD,
-        regras.VPD,
-        regras.CEN,
-        regras.VPE,
-        regras.VME,
-        regras.VCE
-    };
-
-    float maior = 0.0f;
-
-    for(int i = 0; i < 7; i++)
-        if(ativacao[i] > maior)
-            maior = ativacao[i];
-
-    float soma = 0.0f;
-    int quantidade = 0;
-
-    for(int i = 0; i < 7; i++)
-    {
-        if(ativacao[i] == maior)
-        {
-            soma += centros[i];
-            quantidade++;
-        }
-    }
-
-    if(quantidade == 0)
-        return 0;
-
-    return soma / quantidade;
+    return correcao;
 }

@@ -9,8 +9,8 @@ public:
 
     void calcularPWM(const valoresFuzzy& regras, float base);
 
-    int pwmEsq;
-    int pwmDir;
+    int pwmEsq = 0;
+    int pwmDir = 0;
 
 private:
 
@@ -18,6 +18,5 @@ private:
 
     float centroide(const valoresFuzzy& regras);
 
-    float meanMaxEsq(const valoresFuzzy& regras);
-    float meanMaxDir(const valoresFuzzy& regras);
+    float meanMax(const valoresFuzzy& regras);
 };

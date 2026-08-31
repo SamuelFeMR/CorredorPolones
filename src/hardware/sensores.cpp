@@ -44,14 +44,49 @@ void sensores::update()
 
     erro = (int)position - 3500;
 
-    
+    // SENSOR LATERAL DIREITO
     int leituraDireita = analogRead(SensorDireita);
-    leituraDireita = constrain(leituraDireita,thersholdDirMin,thersholdDirMax);
-    detectDireita = map(leituraDireita,thersholdDirMin,thersholdDirMax,0,1000) < 500;
 
+    leituraDireita = constrain(
+        leituraDireita,
+        thersholdDirMin,
+        thersholdDirMax
+    );
+
+    if (thersholdDirMax > thersholdDirMin)
+    {
+        float normalizado =
+            (leituraDireita - thersholdDirMin) * 1000.0f /
+            (thersholdDirMax - thersholdDirMin);
+
+        detectDireita = normalizado < 500.0f;
+    }
+    else
+    {
+        detectDireita = false;
+    }
+
+    // SENSOR LATERAL ESQUERDO
     int leituraEsquerda = analogRead(SensorEsquerda);
-    leituraEsquerda = constrain(leituraEsquerda,thersholdEsqMin,thersholdEsqMax);
-    detectEsquerda = map(leituraEsquerda,thersholdEsqMin,thersholdEsqMax,0,1000) < 500;
+
+    leituraEsquerda = constrain(
+        leituraEsquerda,
+        thersholdEsqMin,
+        thersholdEsqMax
+    );
+
+    if (thersholdEsqMax > thersholdEsqMin)
+    {
+        float normalizado =
+            (leituraEsquerda - thersholdEsqMin) * 1000.0f /
+            (thersholdEsqMax - thersholdEsqMin);
+
+        detectEsquerda = normalizado < 500.0f;
+    }
+    else
+    {
+        detectEsquerda = false;
+    }
 }
 
 bool sensores::direitaDetected() const
