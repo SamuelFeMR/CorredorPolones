@@ -1,4 +1,6 @@
 #include "defuzzy.h"
+#include "funcreg.h"
+#include "func.h"
 
 void defuzzy::calcularPWM(const valoresFuzzy& regras,float base)
 {
@@ -151,7 +153,7 @@ float defuzzy::meanMax(const valoresFuzzy& regras)
     return soma / quantidade;
 }
 
-float defuzzy::getCorrecao() const
+float defuzzy::getCorrecao()
 {
     return correcao;
 }

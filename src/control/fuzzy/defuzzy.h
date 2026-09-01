@@ -2,13 +2,14 @@
 
 #include <Arduino.h>
 #include "funcreg.h"
+#include "func.h"
 
 class defuzzy
 {
 public:
 
     void calcularPWM(const valoresFuzzy& regras, float base);
-
+    float getCorrecao();
     int pwmEsq = 0;
     int pwmDir = 0;
 

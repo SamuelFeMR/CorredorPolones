@@ -1,5 +1,5 @@
-#include <funcreg.h>
-#include <func.h>
+#include "funcreg.h"
+#include "func.h"
 
 valoresFuzzy fuzzy::funcoes(float erro, float varerro)
 {
