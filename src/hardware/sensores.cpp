@@ -17,26 +17,79 @@ void sensores::begin()
 
 void sensores::calibrate()
 {
+    // LED aceso = calibrando
     digitalWrite(2, HIGH);
 
-    for (int i = 0; i < 400; i++)
+    Serial.println();
+    Serial.println("==============================");
+    Serial.println(" INICIANDO CALIBRACAO");
+    Serial.println(" NAO MOVA O ROBO!");
+    Serial.println("==============================");
+
+    const unsigned long TEMPO_CALIBRACAO = 10000;
+    const unsigned long inicio = millis();
+
+    while (millis() - inicio < TEMPO_CALIBRACAO)
     {
+        // Calibração dos 8 sensores QTR
         qtr.calibrate();
 
+        // -------------------------------
+        // SENSOR LATERAL DIREITO
+        // -------------------------------
+
         int direita = analogRead(SensorDireita);
+
+        thersholdDirMin = min(
+            thersholdDirMin,
+            direita
+        );
+
+        thersholdDirMax = max(
+            thersholdDirMax,
+            direita
+        );
+
+
+        // -------------------------------
+        // SENSOR LATERAL ESQUERDO
+        // -------------------------------
+
         int esquerda = analogRead(SensorEsquerda);
 
-        thersholdDirMin = min(thersholdDirMin, direita);
-        thersholdDirMax = max(thersholdDirMax, direita);
+        thersholdEsqMin = min(
+            thersholdEsqMin,
+            esquerda
+        );
 
-        thersholdEsqMin = min(thersholdEsqMin, esquerda);
-        thersholdEsqMax = max(thersholdEsqMax, esquerda);
+        thersholdEsqMax = max(
+            thersholdEsqMax,
+            esquerda
+        );
 
         delay(5);
     }
 
+    // LED apagado = calibração terminou
     digitalWrite(2, LOW);
+
+    Serial.println();
+    Serial.println("==============================");
+    Serial.println(" CALIBRACAO CONCLUIDA!");
+    Serial.println(" ROBO PRONTO!");
+    Serial.println("==============================");
+
+    // 3 piscadas = confirmação física
+    for (int i = 0; i < 3; i++)
+    {
+        digitalWrite(2, HIGH);
+        delay(150);
+
+        digitalWrite(2, LOW);
+        delay(150);
+    }
 }
+
 
 void sensores::update()
 {

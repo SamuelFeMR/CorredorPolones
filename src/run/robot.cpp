@@ -5,26 +5,31 @@ void Robot::begin()
 {
     Serial.begin(115200);
 
-    // Sensores
-    sensoresRobot.begin();
-
-    // Motores
-    configurarMotores();
-
+    // Garantia extra antes de começar
     pararMotores();
 
-    // Calibracao
+    // SENSORES
+    sensoresRobot.begin();
+
+    // MOTORES
+    configurarMotores();
+
+    // CALIBRACAO
     Serial.println("Iniciando calibracao...");
 
     sensoresRobot.calibrate();
 
-    Serial.println("Calibracao concluida.");
+    // Garantia extra depois da calibração
+    pararMotores();
 
+
+    // INICIALIZACAO DO CONTROLE
     erroAnterior = 0;
     primeiroCiclo = true;
 
-    Serial.println("Robot pronto.");
+    Serial.println("Robot pronto!");
 }
+
 
 // UPDATE
 void Robot::update()
@@ -51,28 +56,17 @@ void Robot::update()
 
 
     // 4. INFERENCIA FUZZY
-    valoresFuzzy regras =
-        controladorFuzzy.funcoes(
-            erroAtual,
-            varErro
-        );
+    valoresFuzzy regras = controladorFuzzy.funcoes(erroAtual, varErro);
 
 
     // 5. DEFUZZIFICACAO
-    controladorDefuzzy.calcularPWM(
-        regras,
-        PWM_BASE
-    );
+    controladorDefuzzy.calcularPWM(regras, PWM_BASE);
 
 
     // 6. ATUACAO DOS MOTORES
-    motorEsquerdo(
-        controladorDefuzzy.pwmEsq
-    );
+    motorEsquerdo(controladorDefuzzy.pwmEsq);
 
-    motorDireito(
-        controladorDefuzzy.pwmDir
-    );
+    motorDireito(controladorDefuzzy.pwmDir);
 
     // 7. ATUALIZA ESTADO
     erroAnterior = erroAtual;
@@ -206,11 +200,15 @@ void Robot::motorDireito(int pwm)
 // PARAR MOTORES
 void Robot::pararMotores()
 {
+    digitalWrite(AIN1,HIGH);
+    digitalWrite(AIN2,HIGH);
     ledcWrite(
         PWM_CHANNEL_A,
         0
     );
 
+    digitalWrite(BIN1,HIGH);
+    digitalWrite(BIN2,HIGH);
     ledcWrite(
         PWM_CHANNEL_B,
         0

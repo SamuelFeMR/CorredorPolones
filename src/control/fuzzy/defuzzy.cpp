@@ -2,25 +2,32 @@
 #include "funcreg.h"
 #include "func.h"
 
-void defuzzy::calcularPWM(const valoresFuzzy& regras,float base)
+void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
 {
+    // A base representa a velocidade para frente.
     base = constrain(base, 0.0f, 255.0f);
 
-    // Calcula a correção fuzzy
-    float pwmFuzzy = centroide(regras);
+    // Saída fuzzy = CORREÇÃO, não PWM absoluto.
+    // -255 = curva máxima para esquerda
+    //    0 = seguir reto
+    // +255 = curva máxima para direita
+    float correcaoFuzzy = centroide(regras);
 
-    // Converte o centroide para uma correção
-    correcao = (pwmFuzzy / 255.0f) * base;
+    // Converte a correção fuzzy para uma correção
+    // proporcional à velocidade base.
+    correcao = (correcaoFuzzy / 255.0f) * base;
 
-    if (correcao > 0)
+    if (correcaoFuzzy > 0)
     {
-        // Correção para a direita
+        // Curva para a direita:
+        // mantém o esquerdo e reduz o direito.
         pwmEsq = base;
         pwmDir = base - correcao;
     }
     else
     {
-        // Correção para a esquerda
+        // Curva para a esquerda:
+        // mantém o direito e reduz o esquerdo.
         pwmEsq = base + correcao;
         pwmDir = base;
     }
