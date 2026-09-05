@@ -2,7 +2,6 @@
 
 void sensores::begin()
 {
-    pinMode(2, OUTPUT);
     pinMode(SensorDireita, INPUT);
     pinMode(SensorEsquerda, INPUT);
 
@@ -13,12 +12,22 @@ void sensores::begin()
          
         NUM_SENSORS
     );
+
+    attachInterrupt(
+        digitalPinToInterrupt(PINO_ENCODER_ESQ),
+        encoderEsqISR,
+        RISING
+    );
+
+    attachInterrupt(
+        digitalPinToInterrupt(PINO_ENCODER_DIR),
+        encoderDirISR,
+        RISING
+    );
 }
 
 void sensores::calibrate()
 {
-    // LED aceso = calibrando
-    digitalWrite(2, HIGH);
 
     Serial.println();
     Serial.println("==============================");
@@ -70,24 +79,11 @@ void sensores::calibrate()
         delay(5);
     }
 
-    // LED apagado = calibração terminou
-    digitalWrite(2, LOW);
-
     Serial.println();
     Serial.println("==============================");
     Serial.println(" CALIBRACAO CONCLUIDA!");
     Serial.println(" ROBO PRONTO!");
     Serial.println("==============================");
-
-    // 3 piscadas = confirmação física
-    for (int i = 0; i < 3; i++)
-    {
-        digitalWrite(2, HIGH);
-        delay(150);
-
-        digitalWrite(2, LOW);
-        delay(150);
-    }
 }
 
 
@@ -175,4 +171,24 @@ bool sensores::linhaDetectada() const
     }
 
     return false;
+}
+
+void IRAM_ATTR encoderEsqISR()
+{
+    pulsosEsq++;
+}
+
+void IRAM_ATTR encoderDirISR()
+{
+    pulsosDir++;
+}
+
+float sensores::getVelocidadeEsq()
+{
+    ...
+}
+
+float sensores::getVelocidadeDir()
+{
+    ...
 }
