@@ -14,6 +14,8 @@
 #define ENCODER_PULSOS_POR_VOLTA 72.0f
 #define INTERVALO_VELOCIDADE_MS 200
 
+#define DIAMETRO_RODA_MM 22.0f
+
 class sensores
 {
 public:
@@ -32,6 +34,10 @@ public:
     float getVelocidadeEsq() const;
     float getVelocidadeDIr() const;
 
+    void zerarDistancia();
+    float getDistanciaEsqMm() const;
+    float getDistanciaDirMm() const;
+
 private:
     QTRSensors qtr;
     uint16_t sensorValues[NUM_SENSORS];
@@ -43,4 +49,6 @@ private:
     int thersholdDirMin = 4095, thersholdDirMax = 0, thersholdEsqMin = 4095, thersholdEsqMax = 0;
     volatile uint32_t pulsosEsq = 0;
     volatile uint32_t pulsosDir = 0;
+    int32_t pulsosDistanciaEsq = 0;
+    int32_t pulsosDistanciaDir = 0;
 };

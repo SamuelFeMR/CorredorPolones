@@ -39,6 +39,60 @@ void Robot::update()
     // 1. LEITURA DOS SENSORES
     sensoresRobot.update();
 
+    if (roboParado)
+    {
+        pararMotores();
+        return;
+    }
+    
+    // CONTAGEM DO SENSOR LATERAL DIREITO
+    bool direitaAtual = sensoresRobot.direitaDetected();
+
+    if (direitaAtual && !direitaAnterior)
+    {
+        contadorDeteccoesDireita++;
+
+        Serial.print("DETECCAO DIREITA: ");
+        Serial.println(contadorDeteccoesDireita);
+
+        if (contadorDeteccoesDireita == DETECCOES_NECESSARIAS)
+        {
+            sensoresRobot.zerarDistancia();
+
+            contandoDistancia = true;
+
+            Serial.println("10 DETECCOES!");
+            Serial.println("INICIANDO CONTAGEM DOS 20 CM");
+        }
+    }
+
+    direitaAnterior = direitaAtual;
+
+    if (contandoDistancia)
+    {
+        float distanciaEsq = sensoresRobot.getDistanciaEsqMm();
+        float distanciaDir = sensoresRobot.getDistanciaDirMm();
+
+        float distanciaMedia =
+            (distanciaEsq + distanciaDir) / 2.0f;
+
+        Serial.print("Distancia apos 10 deteccoes: ");
+        Serial.print(distanciaMedia);
+        Serial.println(" mm");
+
+        if (distanciaMedia >= DISTANCIA_POS_DETECCAO_MM)
+        {
+            pararMotores();
+
+            contandoDistancia = false;
+            roboParado = true;
+
+            Serial.println("================================");
+            Serial.println("20 CM PERCORRIDOS!");
+            Serial.println("ROBO PARADO!");
+            Serial.println("================================");
+        }
+    }
 
     if (!sensoresRobot.linhaDetectada())
     {

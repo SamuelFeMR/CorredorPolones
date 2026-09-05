@@ -3,6 +3,22 @@
 volatile int32_t pulsosEsq = 0;
 volatile int32_t pulsosDir = 0;
 
+volatile int32_t pulsosDistanciaEsq = 0;
+volatile int32_t pulsosDistanciaDir = 0;
+
+static constexpr int DETECCOES_NECESSARIAS = 10;
+
+static constexpr float DIAMETRO_RODA_MM = 22.0f;
+static constexpr float DISTANCIA_POS_DETECCAO_MM = 200.0f;
+
+int contadorDeteccoesDireita = 0;
+
+bool direitaAnterior = false;
+bool contandoDistancia = false;
+bool roboParado = false;
+
+float distanciaInicial = 0.0f;
+
 void IRAM_ATTR encoderEsqISR()
 {
     // C1 sofreu uma borda de subida.
@@ -11,10 +27,12 @@ void IRAM_ATTR encoderEsqISR()
     if (digitalRead(esqC2))
     {
         pulsosEsq++;
+        pulsosDistanciaEsq++;
     }
     else
     {
         pulsosEsq--;
+        pulsosDistanciaEsq--;
     }
 }
 
@@ -27,10 +45,12 @@ void IRAM_ATTR encoderDirISR()
     if (digitalRead(dirC2))
     {
         pulsosDir++;
+        pulsosDistanciaDir++;
     }
     else
     {
         pulsosDir--;
+        pulsosDistanciaDir--;
     }
 }
 
@@ -81,18 +101,6 @@ void sensores::begin()
         (const uint8_t[]){39, 34, 35, 32, 33, 25, 26, 27},
          
         NUM_SENSORS
-    );
-
-    attachInterrupt(
-        digitalPinToInterrupt(PINO_ENCODER_ESQ),
-        encoderEsqISR,
-        RISING
-    );
-
-    attachInterrupt(
-        digitalPinToInterrupt(PINO_ENCODER_DIR),
-        encoderDirISR,
-        RISING
     );
 }
 
@@ -317,4 +325,40 @@ float sensores::getVelocidadeEsq() const
 float sensores::getVelocidadeDir() const
 {
     return velDir;
+}
+
+float sensores::getDistanciaEsqMm() const
+{
+    int32_t pulsos;
+
+    noInterrupts();
+    pulsos = pulsosDistanciaEsq;
+    interrupts();
+
+    float circunferencia = PI * DIAMETRO_RODA_MM;
+
+    return (pulsos / ENCODER_PULSOS_POR_VOLTA) * circunferencia;
+}
+
+float sensores::getDistanciaDirMm() const
+{
+    int32_t pulsos;
+
+    noInterrupts();
+    pulsos = pulsosDistanciaDir;
+    interrupts();
+
+    float circunferencia = PI * DIAMETRO_RODA_MM;
+
+    return (pulsos / ENCODER_PULSOS_POR_VOLTA) * circunferencia;
+}
+
+void sensores::zerarDistancia()
+{
+    noInterrupts();
+
+    pulsosDistanciaEsq = 0;
+    pulsosDistanciaDir = 0;
+
+    interrupts();
 }
