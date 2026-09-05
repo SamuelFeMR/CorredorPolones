@@ -53,4 +53,15 @@ private:
 
     void giroCalib();
     void pararMotores();
+
+    // PARADA
+    int contadorDeteccoesDireita = 0;
+
+    bool direitaAnterior = false;
+    bool contandoDistancia = false;
+    bool roboParado = false;
+
+    static constexpr int DETECCOES_NECESSARIAS = 10;
+
+    static constexpr float DISTANCIA_POS_DETECCAO_MM = 200.0f;
 };

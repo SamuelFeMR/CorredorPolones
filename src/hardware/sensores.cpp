@@ -153,61 +153,6 @@ void sensores::calibrate()
     Serial.println("==============================");
 }
 
-
-void sensores::update()
-{
-    uint16_t position = qtr.readLineWhite(sensorValues);
-
-    erro = (int)position - 3500;
-
-    // SENSOR LATERAL DIREITO
-    int leituraDireita = analogRead(SensorDireita);
-
-    leituraDireita = constrain(
-        leituraDireita,
-        thersholdDirMin,
-        thersholdDirMax
-    );
-
-    if (thersholdDirMax > thersholdDirMin)
-    {
-        float normalizado =
-            (leituraDireita - thersholdDirMin) * 1000.0f /
-            (thersholdDirMax - thersholdDirMin);
-
-        detectDireita = normalizado < 500.0f;
-    }
-    else
-    {
-        detectDireita = false;
-    }
-
-    // SENSOR LATERAL ESQUERDO
-    int leituraEsquerda = analogRead(SensorEsquerda);
-
-    leituraEsquerda = constrain(
-        leituraEsquerda,
-        thersholdEsqMin,
-        thersholdEsqMax
-    );
-
-    if (thersholdEsqMax > thersholdEsqMin)
-    {
-        float normalizado =
-            (leituraEsquerda - thersholdEsqMin) * 1000.0f /
-            (thersholdEsqMax - thersholdEsqMin);
-
-        detectEsquerda = normalizado < 500.0f;
-    }
-    else
-    {
-        detectEsquerda = false;
-    }
-
-    // VELOCIDADE DOS MOTORES
-    atualizarVelocidade();
-}
-
 // ATUALIZA VELOCIDADE
 void sensores::atualizarVelocidade()
 {
@@ -263,6 +208,60 @@ void sensores::atualizarVelocidade()
 
     velDir =
         (voltasDir / intervaloSegundos) * 60.0f;
+}
+
+void sensores::update()
+{
+    uint16_t position = qtr.readLineWhite(sensorValues);
+
+    erro = (int)position - 3500;
+
+    // SENSOR LATERAL DIREITO
+    int leituraDireita = analogRead(SensorDireita);
+
+    leituraDireita = constrain(
+        leituraDireita,
+        thersholdDirMin,
+        thersholdDirMax
+    );
+
+    if (thersholdDirMax > thersholdDirMin)
+    {
+        float normalizado =
+            (leituraDireita - thersholdDirMin) * 1000.0f /
+            (thersholdDirMax - thersholdDirMin);
+
+        detectDireita = normalizado < 500.0f;
+    }
+    else
+    {
+        detectDireita = false;
+    }
+
+    // SENSOR LATERAL ESQUERDO
+    int leituraEsquerda = analogRead(SensorEsquerda);
+
+    leituraEsquerda = constrain(
+        leituraEsquerda,
+        thersholdEsqMin,
+        thersholdEsqMax
+    );
+
+    if (thersholdEsqMax > thersholdEsqMin)
+    {
+        float normalizado =
+            (leituraEsquerda - thersholdEsqMin) * 1000.0f /
+            (thersholdEsqMax - thersholdEsqMin);
+
+        detectEsquerda = normalizado < 500.0f;
+    }
+    else
+    {
+        detectEsquerda = false;
+    }
+
+    // VELOCIDADE DOS MOTORES
+    atualizarVelocidade();
 }
 
 // DETECÇÃO DOS SENSORES LATERAIS

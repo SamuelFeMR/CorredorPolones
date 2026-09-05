@@ -31,8 +31,9 @@ public:
     int calculaErro() const;
 
     const uint16_t* getValues() const;
+    void atualizarVelocidade();
     float getVelocidadeEsq() const;
-    float getVelocidadeDIr() const;
+    float getVelocidadeDir() const;
 
     void zerarDistancia();
     float getDistanciaEsqMm() const;
