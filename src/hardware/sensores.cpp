@@ -93,7 +93,7 @@ void sensores::calibrate()
 
 void sensores::update()
 {
-    uint16_t position = qtr.readLineBlack(sensorValues);
+    uint16_t position = qtr.readLineWhite(sensorValues);
 
     erro = (int)position - 3500;
 
@@ -160,4 +160,19 @@ int sensores::calculaErro() const
 const uint16_t* sensores::getValues() const
 {
     return sensorValues;
+}
+
+bool sensores::linhaDetectada() const
+{
+    const uint16_t LIMIAR_LINHA = 700;
+
+    for (int i = 0; i < NUM_SENSORS; i++)
+    {
+        if (sensorValues[i] < LIMIAR_LINHA)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

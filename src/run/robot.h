@@ -51,5 +51,6 @@ private:
     void motorEsquerdo(int pwm);
     void motorDireito(int pwm);
 
+    void giroCalib();
     void pararMotores();
 };

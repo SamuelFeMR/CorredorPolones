@@ -17,6 +17,8 @@ void Robot::begin()
     // CALIBRACAO
     Serial.println("Iniciando calibracao...");
 
+    giroCalib();
+
     sensoresRobot.calibrate();
 
     // Garantia extra depois da calibração
@@ -36,6 +38,16 @@ void Robot::update()
 {
     // 1. LEITURA DOS SENSORES
     sensoresRobot.update();
+
+
+    if (!sensoresRobot.linhaDetectada())
+    {
+        pararMotores();
+
+        Serial.println("LINHA PERDIDA!");
+
+        return;
+    }
 
     // 2. CALCULO DO ERRO
     int erroAtual = sensoresRobot.calculaErro();
@@ -194,6 +206,24 @@ void Robot::motorDireito(int pwm)
     ledcWrite(
         PWM_CHANNEL_B,
         pwm
+    );
+}
+
+// PARAR MOTORES
+void Robot::giroCalib()
+{
+    digitalWrite(AIN1,HIGH);
+    digitalWrite(AIN2,LOW);
+    ledcWrite(
+        PWM_CHANNEL_A,
+        1024
+    );
+
+    digitalWrite(BIN1,LOW);
+    digitalWrite(BIN2,HIGH);
+    ledcWrite(
+        PWM_CHANNEL_B,
+        1024    
     );
 }
 

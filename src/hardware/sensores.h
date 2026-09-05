@@ -17,6 +17,8 @@ public:
     bool direitaDetected() const;
     bool esquerdaDetected() const;
 
+    bool linhaDetectada() const;
+
     int calculaErro() const;
 
     const uint16_t* getValues() const;
