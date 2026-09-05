@@ -6,17 +6,6 @@ volatile int32_t pulsosDir = 0;
 volatile int32_t pulsosDistanciaEsq = 0;
 volatile int32_t pulsosDistanciaDir = 0;
 
-static constexpr int DETECCOES_NECESSARIAS = 10;
-
-static constexpr float DIAMETRO_RODA_MM = 22.0f;
-static constexpr float DISTANCIA_POS_DETECCAO_MM = 200.0f;
-
-int contadorDeteccoesDireita = 0;
-
-bool direitaAnterior = false;
-bool contandoDistancia = false;
-bool roboParado = false;
-
 float distanciaInicial = 0.0f;
 
 void IRAM_ATTR encoderEsqISR()

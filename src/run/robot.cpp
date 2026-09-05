@@ -1,5 +1,17 @@
 #include "robot.h"
 
+
+static constexpr int DETECCOES_NECESSARIAS = 10;
+
+static constexpr float DIAMETRO_RODA_MM = 22.0f;
+static constexpr float DISTANCIA_POS_DETECCAO_MM = 200.0f;
+
+int contadorDeteccoesDireita = 0;
+
+bool direitaAnterior = false;
+bool contandoDistancia = false;
+bool roboParado = false;
+
 // BEGIN
 void Robot::begin()
 {
