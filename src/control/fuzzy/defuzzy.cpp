@@ -5,7 +5,7 @@
 void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
 {
     // A base representa a velocidade para frente.
-    base = constrain(base, 0.0f, 1023.0f);
+    base = constrain(base, 0.0f, 255.0f);
 
     // Saída fuzzy = CORREÇÃO, não PWM absoluto.
     // -255 = curva máxima para esquerda
@@ -15,7 +15,7 @@ void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
 
     // Converte a correção fuzzy para uma correção
     // proporcional à velocidade base.
-    correcao = (correcaoFuzzy / 1023.0f) * base;
+    correcao = (correcaoFuzzy / 255.0f) * base;
 
     if (correcaoFuzzy > 0)
     {
@@ -32,8 +32,8 @@ void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
         pwmEsq = base;
     }
 
-    pwmEsq = constrain(pwmEsq, 0, 1023);
-    pwmDir = constrain(pwmDir, 0, 1023);
+    pwmEsq = constrain(pwmEsq, 0, 255);
+    pwmDir = constrain(pwmDir, 0, 255);
 }
 
 float defuzzy::centroide(const valoresFuzzy& regras)
@@ -53,15 +53,15 @@ float defuzzy::centroide(const valoresFuzzy& regras)
     float numerador = 0.0f;
     float denominador = 0.0f;
 
-    for (int pwm = -1023; pwm <= 1023; pwm++)
+    for (int pwm = -255; pwm <= 255; pwm++)
     {
         float mu = 0.0f;
 
         // -------------------------------
         // Correção para a DIREITA
-        float fullCD  = trapmf(pwm, 600, 800, 1023, 1023);
-        float altoCD  = trimf(pwm, 400, 600, 800);
-        float baixoCD = trimf(pwm, 0, 300, 600);
+        float fullCD  = trapmf(pwm, 170, 220, 255, 255);
+        float altoCD  = trimf(pwm, 100, 170, 220);
+        float baixoCD = trimf(pwm, 0, 80, 140);
 
         // -------------------------------
         // Centro
@@ -69,9 +69,9 @@ float defuzzy::centroide(const valoresFuzzy& regras)
 
         // -------------------------------
         // Correção para a ESQUERDA
-        float baixoCE = trimf(pwm, -600, -300, 0);
-        float altoCE  = trimf(pwm, -800, -600, -400);
-        float fullCE  = trapmf(pwm, -1023, -1023, -800, -600);
+        float baixoCE = trimf(pwm, -140, -80, 0);
+        float altoCE  = trimf(pwm, -220, -170, -100);
+        float fullCE  = trapmf(pwm, -255, -255, -220, -170);
 
         mu = max(mu, min(regras.VCD, fullCD));
         mu = max(mu, min(regras.VMD, altoCD));
