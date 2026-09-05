@@ -4,36 +4,26 @@
 
 void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
 {
-    // A base representa a velocidade para frente.
-    base = constrain(base, 0.0f, 110.0f);
+    base = constrain(base, 0.0f, 255.0f);
 
-    // Saída fuzzy = CORREÇÃO, não PWM absoluto.
-    // -255 = curva máxima para esquerda
-    //    0 = seguir reto
-    // +255 = curva máxima para direita
     float correcaoFuzzy = centroide(regras);
 
-    // Converte a correção fuzzy para uma correção
-    // proporcional à velocidade base.
-    correcao = (correcaoFuzzy / 255.0f) * base;
+    // Normaliza a correção fuzzy
+    float correcaoNova =
+        (correcaoFuzzy / 255.0f) * 255.0f;
 
-    if (correcaoFuzzy > 0)
-    {
-        // Curva para a direita:
-        // mantém o esquerdo e reduz o direito.
-        pwmDir = base + correcao;
-        pwmEsq = base - correcao;
-    }
-    else
-    {
-        // Curva para a esquerda:
-        // mantém o direito e reduz o esquerdo.
-        pwmDir = base + correcao;
-        pwmEsq = base - correcao;
-    }
+    // Suavização exponencial
+    correcao =
+        correcao + SUAVIZACAO * (correcaoNova - correcao);
 
-    pwmEsq = constrain(pwmEsq, 0, 255);
-    pwmDir = constrain(pwmDir, 0, 255);
+    // Limita a correção
+    correcao = constrain(correcao, -255.0f, 255.0f);
+
+    pwmDir = base + correcao;
+    pwmEsq = base - correcao;
+
+    pwmDir = constrain(pwmDir, 0.0f, 255.0f);
+    pwmEsq = constrain(pwmEsq, 0.0f, 255.0f);
 }
 
 float defuzzy::centroide(const valoresFuzzy& regras)

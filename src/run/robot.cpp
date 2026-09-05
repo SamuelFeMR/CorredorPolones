@@ -232,7 +232,7 @@ void Robot::motorEsquerdo(int pwm)
     pwm = constrain(
         pwm,
         0,
-        180
+        255
     );
 
 
@@ -260,7 +260,7 @@ void Robot::motorDireito(int pwm)
     pwm = constrain(
         pwm,
         0,
-        180
+        255
     );
 
 
