@@ -23,7 +23,7 @@ private:
     int erroAnterior = 0;
     bool primeiroCiclo = true;
 
-    static constexpr float PWM_BASE = 170.0f;
+    static constexpr float PWM_BASE = 70.0f;
 
     // MOTOR ESQUERDO
     static constexpr uint8_t AIN1 = 18;

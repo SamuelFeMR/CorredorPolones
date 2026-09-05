@@ -4,11 +4,11 @@
 valoresFuzzy fuzzy::funcoes(float erro, float varerro)
 {
     valoresFuzzy saida;
-    EGRN = trapmf(erro,-3500,-3500,-350,-180); //analisar na calibragem do sensor se os valores estao corretos
-    EPQN = trimf(erro,-300,-180,-45);
-    EZER = trimf(erro,-50,0,50);
-    EPQP = trimf(erro,45,180,300);
-    EGRP = trapmf(erro,180,350,3500,3500);
+    EGRN = trapmf(erro,-3500,-3500,-700,-500); //analisar na calibragem do sensor se os valores estao corretos
+    EPQN = trimf(erro,-700,-500,-200);
+    EZER = trimf(erro,-50,0,300);
+    EPQP = trimf(erro,200,500,700);
+    EGRP = trapmf(erro,500,700,3500,3500);
 
     VGRN = trapmf(varerro,-3500,-3500,-200,-150);
     VPQN = trimf(varerro,-200,-150,-100);

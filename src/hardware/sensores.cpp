@@ -212,7 +212,7 @@ void sensores::atualizarVelocidade()
 
 void sensores::update()
 {
-    uint16_t position = qtr.readLineBlack(sensorValues);
+    uint16_t position = qtr.readLineWhite(sensorValues);
 
     erro = (int)position - 3500;
 

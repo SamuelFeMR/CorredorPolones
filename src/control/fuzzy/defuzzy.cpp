@@ -5,7 +5,7 @@
 void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
 {
     // A base representa a velocidade para frente.
-    base = constrain(base, 0.0f, 255.0f);
+    base = constrain(base, 0.0f, 110.0f);
 
     // Saída fuzzy = CORREÇÃO, não PWM absoluto.
     // -255 = curva máxima para esquerda
@@ -21,7 +21,7 @@ void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
     {
         // Curva para a direita:
         // mantém o esquerdo e reduz o direito.
-        pwmDir = base;
+        pwmDir = base + correcao;
         pwmEsq = base - correcao;
     }
     else
@@ -29,7 +29,7 @@ void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
         // Curva para a esquerda:
         // mantém o direito e reduz o esquerdo.
         pwmDir = base + correcao;
-        pwmEsq = base;
+        pwmEsq = base - correcao;
     }
 
     pwmEsq = constrain(pwmEsq, 0, 255);
