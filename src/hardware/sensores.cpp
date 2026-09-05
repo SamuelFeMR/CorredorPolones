@@ -102,7 +102,7 @@ void sensores::calibrate()
     Serial.println(" NAO MOVA O ROBO!");
     Serial.println("==============================");
 
-    const unsigned long TEMPO_CALIBRACAO = 10000;
+    const unsigned long TEMPO_CALIBRACAO = 3000;
     const unsigned long inicio = millis();
 
     while (millis() - inicio < TEMPO_CALIBRACAO)
@@ -212,7 +212,7 @@ void sensores::atualizarVelocidade()
 
 void sensores::update()
 {
-    uint16_t position = qtr.readLineWhite(sensorValues);
+    uint16_t position = qtr.readLineBlack(sensorValues);
 
     erro = (int)position - 3500;
 
@@ -290,11 +290,11 @@ const uint16_t* sensores::getValues() const
 // LINHA DETECTADA
 bool sensores::linhaDetectada() const
 {
-    const uint16_t LIMIAR_LINHA = 700;
+    const uint16_t LIMIAR_LINHA = 750;
 
     for (int i = 0; i < NUM_SENSORS; i++)
     {
-        if (sensorValues[i] < LIMIAR_LINHA)
+        if (sensorValues[i] > LIMIAR_LINHA)
         {
             return true;
         }

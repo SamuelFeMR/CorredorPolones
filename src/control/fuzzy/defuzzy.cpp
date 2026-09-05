@@ -21,15 +21,15 @@ void defuzzy::calcularPWM(const valoresFuzzy& regras, float base)
     {
         // Curva para a direita:
         // mantém o esquerdo e reduz o direito.
-        pwmEsq = base;
-        pwmDir = base - correcao;
+        pwmDir = base;
+        pwmEsq = base - correcao;
     }
     else
     {
         // Curva para a esquerda:
         // mantém o direito e reduz o esquerdo.
-        pwmEsq = base + correcao;
-        pwmDir = base;
+        pwmDir = base + correcao;
+        pwmEsq = base;
     }
 
     pwmEsq = constrain(pwmEsq, 0, 255);

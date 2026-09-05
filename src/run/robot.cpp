@@ -75,11 +75,11 @@ void Robot::update()
 
         float distanciaMedia =
             (distanciaEsq + distanciaDir) / 2.0f;
-
-        Serial.print("Distancia apos 10 deteccoes: ");
+/*
+        //Serial.print("Distancia apos 10 deteccoes: ");
         Serial.print(distanciaMedia);
         Serial.println(" mm");
-
+*/
         if (distanciaMedia >= DISTANCIA_POS_DETECCAO_MM)
         {
             pararMotores();
@@ -143,8 +143,22 @@ void Robot::update()
     erroAnterior = erroAtual;
 
 
-    // DEBUG
-    Serial.print("Erro: ");
+    // DEBUG DOS SENSORES
+    const uint16_t* valores = sensoresRobot.getValues();
+
+    Serial.print("SENSORES: ");
+
+    for (int i = 0; i < NUM_SENSORS; i++)
+    {
+        Serial.print(valores[i]);
+
+        if (i < NUM_SENSORS - 1)
+        {
+            Serial.print(" | ");
+        }
+    }
+
+    Serial.print(" || Erro: ");
     Serial.print(erroAtual);
 
     Serial.print(" | dErro: ");
@@ -218,7 +232,7 @@ void Robot::motorEsquerdo(int pwm)
     pwm = constrain(
         pwm,
         0,
-        255
+        180
     );
 
 
@@ -246,7 +260,7 @@ void Robot::motorDireito(int pwm)
     pwm = constrain(
         pwm,
         0,
-        255
+        180
     );
 
 
@@ -275,14 +289,14 @@ void Robot::giroCalib()
     digitalWrite(AIN2,LOW);
     ledcWrite(
         PWM_CHANNEL_A,
-        1024
+        500
     );
 
     digitalWrite(BIN1,LOW);
     digitalWrite(BIN2,HIGH);
     ledcWrite(
         PWM_CHANNEL_B,
-        1024    
+        500
     );
 }
 
