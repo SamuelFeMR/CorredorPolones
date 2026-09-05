@@ -11,6 +11,8 @@
 #define esqC2 21
 #define dirC1 19
 #define dirC2 14
+#define ENCODER_PULSOS_POR_VOLTA 72.0f
+#define INTERVALO_VELOCIDADE_MS 200
 
 class sensores
 {
@@ -28,7 +30,7 @@ public:
 
     const uint16_t* getValues() const;
     float getVelocidadeEsq() const;
-    float getVelocidadeEsq() const;
+    float getVelocidadeDIr() const;
 
 private:
     QTRSensors qtr;

@@ -49,6 +49,9 @@ void Robot::update()
         return;
     }
 
+    float velocidadeEsq = sensoresRobot.getVelocidadeEsq();
+    float velocidadeDir = sensoresRobot.getVelocidadeDir();
+
     // 2. CALCULO DO ERRO
     int erroAtual = sensoresRobot.calculaErro();
 
