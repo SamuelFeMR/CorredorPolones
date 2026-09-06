@@ -29,12 +29,12 @@ void Robot::begin()
     erroAnterior = 0;
     primeiroCiclo = true;
     
-    controladorPD.configurar(
-        PD_KP,
-        PD_KD
+    controladorPID.configurar(
+        PID_KP,
+        PID_KD
     );
 
-    controladorPD.reset();
+    controladorPID.reset();
 
     Serial.println("Robot pronto!");
 }
@@ -107,7 +107,7 @@ void Robot::update()
     {
         pararMotores();
 
-        controladorPD.reset();
+        controladorPID.reset();
 
         Serial.println("LINHA PERDIDA!");
 
@@ -174,13 +174,13 @@ void Robot::update()
 
 
     // -------------------------------------------------
-    // PD
+    // PID
     // -------------------------------------------------
 
-    else if (CONTROLE_ATUAL == CONTROLE_PD)
+    else if (CONTROLE_ATUAL == CONTROLE_PID)
     {
         correcao =
-            controladorPD.calcular(
+            controladorPID.calcular(
                 erroAtual
             );
 
