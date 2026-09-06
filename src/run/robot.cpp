@@ -204,14 +204,14 @@ void Robot::update()
             constrain(
                 pwmEsq,
                 0,
-                255
+                PWM_MAX
             );
 
         pwmDir =
             constrain(
                 pwmDir,
                 0,
-                255
+                PWM_MAX
             );
     }
 
@@ -382,14 +382,14 @@ void Robot::giroCalib()
     digitalWrite(AIN2,LOW);
     ledcWrite(
         PWM_CHANNEL_A,
-        160
+        180
     );
 
     digitalWrite(BIN1,LOW);
     digitalWrite(BIN2,HIGH);
     ledcWrite(
         PWM_CHANNEL_B,
-        160
+        180
     );
 }
 

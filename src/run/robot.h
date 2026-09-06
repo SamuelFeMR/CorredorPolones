@@ -6,6 +6,9 @@
 #include "control/fuzzy/funcreg.h"
 #include "control/fuzzy/defuzzy.h"
 #include "control/pid/pid.h"
+
+#define PWM_MAX 210
+
 class Robot
 {
 public:
@@ -35,14 +38,14 @@ private:
     int erroAnterior = 0;
     bool primeiroCiclo = true;
 
-    static constexpr float PWM_BASE = 150.0f;
+    static constexpr float PWM_BASE = 110.0f;
 
-    static constexpr float PID_KP = 60.0f;
-    static constexpr float PID_KD = 0.0f;
+    static constexpr float PID_KP = 90.0f;
+    static constexpr float PID_KD = 0.05f;
 
     static constexpr unsigned long INTERVALO_DEBUG_MS = 100;
     unsigned long ultimoDebug = 0;
-    
+
     // MOTOR ESQUERDO
     static constexpr uint8_t AIN1 = 18;
     static constexpr uint8_t AIN2 = 5;
