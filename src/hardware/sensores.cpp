@@ -289,11 +289,11 @@ const uint16_t* sensores::getValues() const
 // LINHA DETECTADA
 bool sensores::linhaDetectada() const
 {
-    const uint16_t LIMIAR_LINHA = 600;
+    const uint16_t LIMIAR_LINHA = 800;
 
     for (int i = 0; i < NUM_SENSORS; i++)
     {
-        if (sensorValues[i] > LIMIAR_LINHA)
+        if (sensorValues[i] < LIMIAR_LINHA)
         {
             return true;
         }

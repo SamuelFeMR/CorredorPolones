@@ -15,11 +15,12 @@ public:
 private:
 
     // MÓDULOS
+
     sensores sensoresRobot;
     fuzzy controladorFuzzy;
     defuzzy controladorDefuzzy;
 
-    PID controladorPID;
+    PID controladorPID{PID_KP, PID_KD};
 
     enum TipoControle
     {
@@ -36,8 +37,8 @@ private:
 
     static constexpr float PWM_BASE = 160.0f;
 
-    static constexpr float PID_KP = 180.0f;
-    static constexpr float PID_KD = 8.0f;
+    static constexpr float PID_KP = 60.0f;
+    static constexpr float PID_KD = 80.0f;
 
     static constexpr unsigned long INTERVALO_DEBUG_MS = 100;
     unsigned long ultimoDebug = 0;

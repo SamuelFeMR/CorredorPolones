@@ -11,7 +11,7 @@ public:
     // Calcula a correção diferencial dos motores.
     //
     // Entrada:
-    // erro = aproximadamente -3500 até +3500
+    // erro = aproximadamente -600 até +600
     //
     // Saída:
     // aproximadamente -255 até +255
@@ -45,7 +45,7 @@ private:
     bool primeiroCiclo = true;
 
     // Erro máximo esperado pelo QTR
-    static constexpr float ERRO_MAX = 3500.0f;
+    static constexpr float ERRO_MAX = 3000.0f;
 
     // Correção máxima
     static constexpr float SAIDA_MAX = 255.0f;
