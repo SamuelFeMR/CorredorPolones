@@ -255,7 +255,7 @@ void sensores::update()
 
         detectEsquerda = normalizado < 500.0f;
     }
-    else
+    else 
     {
         detectEsquerda = false;
     }

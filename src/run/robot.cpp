@@ -289,14 +289,14 @@ void Robot::giroCalib()
     digitalWrite(AIN2,LOW);
     ledcWrite(
         PWM_CHANNEL_A,
-        120
+        160
     );
 
     digitalWrite(BIN1,LOW);
     digitalWrite(BIN2,HIGH);
     ledcWrite(
         PWM_CHANNEL_B,
-        120
+        160
     );
 }
 
