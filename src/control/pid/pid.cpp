@@ -1,31 +1,37 @@
 #include "pid.h"
 
-PID::PID(float kp, float ki, float kd)
+PD::PD(float novoKp, float novoKd)
 {
-    configurar(kp, ki, kd);
+    configurar(novoKp, novoKd);
 }
 
-void PID::configurar(float novoKp, float novoKi, float novoKd)
+
+void PD::configurar(float novoKp, float novoKd)
 {
     kp = novoKp;
-    ki = novoKi;
     kd = novoKd;
 
     reset();
 }
 
-void PID::reset()
+
+void PD::reset()
 {
-    integral = 0.0f;
     erroAnterior = 0.0f;
+
     derivadaFiltrada = 0.0f;
+
+    proporcionalAtual = 0.0f;
+    derivadaAtual = 0.0f;
+    correcaoAtual = 0.0f;
 
     tempoAnterior = millis();
 
     primeiroCiclo = true;
 }
 
-float PID::calcular(float erro)
+
+float PD::calcular(float erro)
 {
     unsigned long agora = millis();
 
@@ -34,20 +40,21 @@ float PID::calcular(float erro)
 
     tempoAnterior = agora;
 
-    // Evita divisão por zero
+    // Proteção contra divisão por zero
     if (dt <= 0.0f)
     {
         dt = 0.001f;
     }
 
-    // -------------------------------------------------
+
+    // =================================================
     // NORMALIZAÇÃO DO ERRO
-    // -------------------------------------------------
-    //
+    // =================================================
+
     // -3500 -> -1
     //     0 ->  0
     // +3500 -> +1
-    //
+
     float erroNormalizado =
         erro / ERRO_MAX;
 
@@ -59,9 +66,17 @@ float PID::calcular(float erro)
         );
 
 
-    // -------------------------------------------------
-    // DERIVADA
-    // -------------------------------------------------
+    // =================================================
+    // TERMO PROPORCIONAL
+    // =================================================
+
+    proporcionalAtual =
+        kp * erroNormalizado;
+
+
+    // =================================================
+    // TERMO DERIVATIVO
+    // =================================================
 
     float derivada = 0.0f;
 
@@ -74,7 +89,17 @@ float PID::calcular(float erro)
     primeiroCiclo = false;
 
 
-    // Filtro passa-baixa na derivada
+    // Limita a derivada antes do filtro
+
+    derivada =
+        constrain(
+            derivada,
+            -DERIVADA_MAX,
+            DERIVADA_MAX
+        );
+
+
+    // Filtro passa-baixa
 
     derivadaFiltrada =
         FILTRO_DERIVADA * derivadaFiltrada
@@ -82,80 +107,67 @@ float PID::calcular(float erro)
         (1.0f - FILTRO_DERIVADA) * derivada;
 
 
-    // -------------------------------------------------
-    // INTEGRAL
-    // -------------------------------------------------
-
-    integral +=
-        erroNormalizado * dt;
-
-    integral =
-        constrain(
-            integral,
-            -INTEGRAL_MAX,
-            INTEGRAL_MAX
-        );
-
-
-    // -------------------------------------------------
-    // PID
-    // -------------------------------------------------
-
-    float P =
-        kp * erroNormalizado;
-
-    float I =
-        ki * integral;
-
-    float D =
+    derivadaAtual =
         kd * derivadaFiltrada;
 
 
-    float saida =
-        P + I + D;
+    // =================================================
+    // PD
+    // =================================================
+
+    correcaoAtual =
+        proporcionalAtual
+        +
+        derivadaAtual;
 
 
-    // -------------------------------------------------
-    // LIMITAÇÃO
-    // -------------------------------------------------
+    // =================================================
+    // LIMITAÇÃO DA SAÍDA
+    // =================================================
 
-    saida =
+    correcaoAtual =
         constrain(
-            saida,
+            correcaoAtual,
             -SAIDA_MAX,
             SAIDA_MAX
         );
 
 
-    // Guarda erro atual
+    // Guarda erro para o próximo ciclo
+
     erroAnterior =
         erroNormalizado;
 
 
-    return saida;
+    return correcaoAtual;
 }
 
-float PID::getKp() const
+
+float PD::getKp() const
 {
     return kp;
 }
 
-float PID::getKi() const
-{
-    return ki;
-}
 
-float PID::getKd() const
+float PD::getKd() const
 {
     return kd;
 }
 
-float PID::getIntegral() const
+
+float PD::getProporcional() const
 {
-    return integral;
+    return proporcionalAtual;
 }
 
-float PID::getDerivada() const
+
+float PD::getDerivada() const
 {
-    return derivadaFiltrada;
+    return derivadaAtual;
+}
+
+
+float PD::getCorrecao() const
+{
+    return correcaoAtual;
 }

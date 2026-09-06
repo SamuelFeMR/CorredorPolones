@@ -5,7 +5,7 @@
 #include "hardware/sensores.h"
 #include "control/fuzzy/funcreg.h"
 #include "control/fuzzy/defuzzy.h"
-
+#include "control/pid/pid.h"
 class Robot
 {
 public:
@@ -19,12 +19,29 @@ private:
     fuzzy controladorFuzzy;
     defuzzy controladorDefuzzy;
 
+    PD controladorPD;
+
+    enum TipoControle
+    {
+        CONTROLE_FUZZY,
+        CONTROLE_PD
+    };
+
+    static constexpr TipoControle CONTROLE_ATUAL = CONTROLE_PD;
+
+
     // CONTROLE
     int erroAnterior = 0;
     bool primeiroCiclo = true;
 
     static constexpr float PWM_BASE = 160.0f;
 
+    static constexpr float PD_KP = 180.0f;
+    static constexpr float PD_KD = 8.0f;
+
+    static constexpr unsigned long INTERVALO_DEBUG_MS = 100;
+    unsigned long ultimoDebug = 0;
+    
     // MOTOR ESQUERDO
     static constexpr uint8_t AIN1 = 18;
     static constexpr uint8_t AIN2 = 5;

@@ -28,6 +28,13 @@ void Robot::begin()
     // INICIALIZACAO DO CONTROLE
     erroAnterior = 0;
     primeiroCiclo = true;
+    
+    controladorPD.configurar(
+        PD_KP,
+        PD_KD
+    );
+
+    controladorPD.reset();
 
     Serial.println("Robot pronto!");
 }
@@ -100,6 +107,8 @@ void Robot::update()
     {
         pararMotores();
 
+        controladorPD.reset();
+
         Serial.println("LINHA PERDIDA!");
 
         return;
@@ -126,50 +135,134 @@ void Robot::update()
     }
 
 
-    // 4. INFERENCIA FUZZY
-    valoresFuzzy regras = controladorFuzzy.funcoes(erroAtual, varErro);
+    // =================================================
+    // CONTROLE
+    // =================================================
+
+    float correcao = 0.0f;
+
+    int pwmEsq = 0;
+    int pwmDir = 0;
 
 
-    // 5. DEFUZZIFICACAO
-    controladorDefuzzy.calcularPWM(regras, PWM_BASE);
+    // -------------------------------------------------
+    // FUZZY
+    // -------------------------------------------------
+
+    if (CONTROLE_ATUAL == CONTROLE_FUZZY)
+    {
+        valoresFuzzy regras =
+            controladorFuzzy.funcoes(
+                erroAtual,
+                varErro
+            );
+
+        controladorDefuzzy.calcularPWM(
+            regras,
+            PWM_BASE
+        );
+
+        pwmEsq =
+            controladorDefuzzy.pwmEsq;
+
+        pwmDir =
+            controladorDefuzzy.pwmDir;
+
+        correcao =
+            controladorDefuzzy.getCorrecao();
+    }
 
 
-    // 6. ATUACAO DOS MOTORES
-    motorEsquerdo(controladorDefuzzy.pwmEsq);
+    // -------------------------------------------------
+    // PD
+    // -------------------------------------------------
 
-    motorDireito(controladorDefuzzy.pwmDir);
+    else if (CONTROLE_ATUAL == CONTROLE_PD)
+    {
+        correcao =
+            controladorPD.calcular(
+                erroAtual
+            );
+
+        // Mistura diferencial
+        //
+        // correção positiva:
+        // motor esquerdo aumenta
+        // motor direito diminui
+        //
+        // correção negativa:
+        // motor direito aumenta
+        // motor esquerdo diminui
+
+        pwmEsq =
+            PWM_BASE + correcao;
+
+        pwmDir =
+            PWM_BASE - correcao;
+
+        pwmEsq =
+            constrain(
+                pwmEsq,
+                0,
+                255
+            );
+
+        pwmDir =
+            constrain(
+                pwmDir,
+                0,
+                255
+            );
+    }
+
+
+    // =================================================
+    // ATUACAO
+    // =================================================
+
+    motorEsquerdo(pwmEsq);
+
+    motorDireito(pwmDir);
 
     // 7. ATUALIZA ESTADO
     erroAnterior = erroAtual;
 
 
     // DEBUG DOS SENSORES
-    const uint16_t* valores = sensoresRobot.getValues();
-
-    Serial.print("SENSORES: ");
-
-    for (int i = 0; i < NUM_SENSORS; i++)
+    if (millis() - ultimoDebug >= INTERVALO_DEBUG_MS)
     {
-        Serial.print(valores[i]);
+        ultimoDebug = millis();
 
-        if (i < NUM_SENSORS - 1)
+        const uint16_t* valores =
+            sensoresRobot.getValues();
+
+        Serial.print("SENSORES: ");
+
+        for (int i = 0; i < NUM_SENSORS; i++)
         {
-            Serial.print(" | ");
+            Serial.print(valores[i]);
+
+            if (i < NUM_SENSORS - 1)
+            {
+                Serial.print(" | ");
+            }
         }
+
+        Serial.print(" || Erro: ");
+        Serial.print(erroAtual);
+
+        Serial.print(" | dErro: ");
+        Serial.print(varErro);
+
+        Serial.print(" | Correcao: ");
+        Serial.print(correcao);
+
+        Serial.print(" | PWM Esq: ");
+        Serial.print(pwmEsq);
+
+        Serial.print(" | PWM Dir: ");
+        Serial.println(pwmDir);
     }
-
-    Serial.print(" || Erro: ");
-    Serial.print(erroAtual);
-
-    Serial.print(" | dErro: ");
-    Serial.print(varErro);
-
-    Serial.print(" | PWM Esq: ");
-    Serial.print(controladorDefuzzy.pwmEsq);
-
-    Serial.print(" | PWM Dir: ");
-    Serial.println(controladorDefuzzy.pwmDir);
-    
 }
 
 
