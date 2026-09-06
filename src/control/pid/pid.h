@@ -2,11 +2,11 @@
 
 #include <Arduino.h>
 
-class PD
+class PID
 {
 public:
 
-    PD(float kp, float kd);
+    PID(float kp, float kd);
 
     // Calcula a correção diferencial dos motores.
     //

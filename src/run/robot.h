@@ -19,7 +19,7 @@ private:
     fuzzy controladorFuzzy;
     defuzzy controladorDefuzzy;
 
-    PD controladorPD;
+    PID controladorPD;
 
     enum TipoControle
     {

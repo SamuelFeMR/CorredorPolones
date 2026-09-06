@@ -1,12 +1,12 @@
 #include "pid.h"
 
-PD::PD(float novoKp, float novoKd)
+PID::PID(float novoKp, float novoKd)
 {
     configurar(novoKp, novoKd);
 }
 
 
-void PD::configurar(float novoKp, float novoKd)
+void PID::configurar(float novoKp, float novoKd)
 {
     kp = novoKp;
     kd = novoKd;
@@ -15,7 +15,7 @@ void PD::configurar(float novoKp, float novoKd)
 }
 
 
-void PD::reset()
+void PID::reset()
 {
     erroAnterior = 0.0f;
 
@@ -31,7 +31,7 @@ void PD::reset()
 }
 
 
-float PD::calcular(float erro)
+float PID::calcular(float erro)
 {
     unsigned long agora = millis();
 
@@ -112,7 +112,7 @@ float PD::calcular(float erro)
 
 
     // =================================================
-    // PD
+    // PID
     // =================================================
 
     correcaoAtual =
@@ -143,31 +143,31 @@ float PD::calcular(float erro)
 }
 
 
-float PD::getKp() const
+float PID::getKp() const
 {
     return kp;
 }
 
 
-float PD::getKd() const
+float PID::getKd() const
 {
     return kd;
 }
 
 
-float PD::getProporcional() const
+float PID::getProporcional() const
 {
     return proporcionalAtual;
 }
 
 
-float PD::getDerivada() const
+float PID::getDerivada() const
 {
     return derivadaAtual;
 }
 
 
-float PD::getCorrecao() const
+float PID::getCorrecao() const
 {
     return correcaoAtual;
 }
