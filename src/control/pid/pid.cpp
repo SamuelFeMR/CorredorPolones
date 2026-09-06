@@ -56,15 +56,7 @@ float PID::calcular(float erro)
     // +3500 -> +1
 
     float erroNormalizado =
-        erro / ERRO_MAX;
-
-    erroNormalizado =
-        constrain(
-            erroNormalizado,
-            -1.0f,
-            1.0f
-        );
-
+        erro;
 
     // =================================================
     // TERMO PROPORCIONAL
@@ -91,24 +83,11 @@ float PID::calcular(float erro)
 
     // Limita a derivada antes do filtro
 
-    derivada =
-        constrain(
-            derivada,
-            -DERIVADA_MAX,
-            DERIVADA_MAX
-        );
-
 
     // Filtro passa-baixa
 
-    derivadaFiltrada =
-        FILTRO_DERIVADA * derivadaFiltrada
-        +
-        (1.0f - FILTRO_DERIVADA) * derivada;
-
-
     derivadaAtual =
-        kd * derivadaFiltrada;
+        kd * derivada;
 
 
     // =================================================

@@ -114,7 +114,7 @@ void Robot::update()
             Serial.println("LINHA PERDIDA! Mantendo ultimo PWM...");
         }
 
-        // Continua com o último comando por 500 ms
+        // Continua com o último co mando por 500 ms
         if (millis() - inicioLinhaPerdida < TEMPO_RECUPERACAO_MS)
         {
             motorEsquerdo(ultimoPwmEsq);
@@ -240,11 +240,7 @@ void Robot::update()
     // =================================================
     // ATUACAO
     // =================================================
-
-    // Guarda o último comando válido
-    ultimoPwmEsq = pwmEsq;
-    ultimoPwmDir = pwmDir;
-
+    
     // Aplica aos motores
     motorEsquerdo(pwmEsq);
     motorDireito(pwmDir);
@@ -403,7 +399,7 @@ void Robot::motorDireito(int pwm)
 // PARAR MOTORES
 void Robot::giroCalib()
 {
-    digitalWrite(AIN1,HIGH);
+    digitalWrite(AIN1,LOW);
     digitalWrite(AIN2,LOW);
     ledcWrite(
         PWM_CHANNEL_A,
@@ -411,7 +407,7 @@ void Robot::giroCalib()
     );
 
     digitalWrite(BIN1,LOW);
-    digitalWrite(BIN2,HIGH);
+    digitalWrite(BIN2,LOW);
     ledcWrite(
         PWM_CHANNEL_B,
         180

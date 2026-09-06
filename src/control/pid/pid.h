@@ -45,7 +45,7 @@ private:
     bool primeiroCiclo = true;
 
     // Erro máximo esperado pelo QTR
-    static constexpr float ERRO_MAX = 3000.0f;
+    static constexpr float ERRO_MAX = 1500.0f;
 
     // Correção máxima
     static constexpr float SAIDA_MAX = 255.0f;

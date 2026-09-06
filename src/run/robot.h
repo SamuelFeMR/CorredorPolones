@@ -31,7 +31,7 @@ private:
         CONTROLE_PID
     };
 
-    static constexpr TipoControle CONTROLE_ATUAL = CONTROLE_FUZZY;
+    static constexpr TipoControle CONTROLE_ATUAL = CONTROLE_PID;
 
     // RECUPERAÇÃO DE LINHA
     int ultimoPwmEsq = 0;
@@ -49,8 +49,8 @@ private:
 
     static constexpr float PWM_BASE = 110.0f;
 
-    static constexpr float PID_KP = 90.0f;
-    static constexpr float PID_KD = 0.05f;
+    static constexpr float PID_KP = 0.008f;
+    static constexpr float PID_KD = 3.0f;
 
     static constexpr unsigned long INTERVALO_DEBUG_MS = 100;
     unsigned long ultimoDebug = 0;
