@@ -98,8 +98,7 @@ void sensores::calibrate()
 
     Serial.println();
     Serial.println("==============================");
-    Serial.println(" INICIANDO CALIBRACAO");
-    Serial.println(" NAO MOVA O ROBO!");
+    Serial.println("ROBO GIRANDO PARA CALIBRACAO...");
     Serial.println("==============================");
 
     const unsigned long TEMPO_CALIBRACAO = 3000;
@@ -290,7 +289,7 @@ const uint16_t* sensores::getValues() const
 // LINHA DETECTADA
 bool sensores::linhaDetectada() const
 {
-    const uint16_t LIMIAR_LINHA = 750;
+    const uint16_t LIMIAR_LINHA = 600;
 
     for (int i = 0; i < NUM_SENSORS; i++)
     {

@@ -9,11 +9,11 @@ valoresFuzzy fuzzy::funcoes(float erro, float varerro)
     // FUNCOES DE PERTINENCIA - ERRO
     // ================================
 
-    EGRN = trapmf(erro, -3500, -3500, -300, -100);
-    EPQN = trimf(erro, -200, -100, -0);
-    EZER = trimf(erro, -80, 0, 80);
-    EPQP = trimf(erro, 0, 100, 200);
-    EGRP = trapmf(erro, 100, 300, 3500, 3500);
+    EGRN = trapmf(erro, -3500, -3500, -600, -250);
+    EPQN = trimf(erro, -400, -250, -100);
+    EZER = trimf(erro, -150, 0, 150);
+    EPQP = trimf(erro, 100, 250, 400);
+    EGRP = trapmf(erro, 250, 300, 3500, 3500);
 
 
     // ================================
