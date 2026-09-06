@@ -29,10 +29,7 @@ void Robot::begin()
     erroAnterior = 0;
     primeiroCiclo = true;
     
-    controladorPID.configurar(
-        PID_KP,
-        PID_KD
-    );
+    PID pd(0.05, 0.02);
 
     controladorPID.reset();
 
@@ -240,7 +237,7 @@ void Robot::update()
     // =================================================
     // ATUACAO
     // =================================================
-    
+
     // Aplica aos motores
     motorEsquerdo(pwmEsq);
     motorDireito(pwmDir);

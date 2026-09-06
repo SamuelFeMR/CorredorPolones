@@ -31,5 +31,5 @@ void setup()
 void loop()
 {
     robot.update();
-    delay(10);
+    delay(20);
 }

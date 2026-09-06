@@ -1,152 +1,27 @@
 #include "pid.h"
 
-PID::PID(float novoKp, float novoKd)
+PID::PID(float kp, float kd)
 {
-    configurar(novoKp, novoKd);
+    this->kp = kp;
+    this->kd = kd;
+
+    erroAnterior = 0;
 }
-
-
-void PID::configurar(float novoKp, float novoKd)
-{
-    kp = novoKp;
-    kd = novoKd;
-
-    reset();
-}
-
-
-void PID::reset()
-{
-    erroAnterior = 0.0f;
-
-    derivadaFiltrada = 0.0f;
-
-    proporcionalAtual = 0.0f;
-    derivadaAtual = 0.0f;
-    correcaoAtual = 0.0f;
-
-    tempoAnterior = millis();
-
-    primeiroCiclo = true;
-}
-
 
 float PID::calcular(float erro)
 {
-    unsigned long agora = millis();
+    float derivada = erro - erroAnterior;
 
-    float dt =
-        (agora - tempoAnterior) / 1000.0f;
-
-    tempoAnterior = agora;
-
-    // Proteção contra divisão por zero
-    if (dt <= 0.0f)
-    {
-        dt = 0.001f;
-    }
-
-
-    // =================================================
-    // NORMALIZAÇÃO DO ERRO
-    // =================================================
-
-    // -3500 -> -1
-    //     0 ->  0
-    // +3500 -> +1
-
-    float erroNormalizado =
-        erro;
-
-    // =================================================
-    // TERMO PROPORCIONAL
-    // =================================================
-
-    proporcionalAtual =
-        kp * erroNormalizado;
-
-
-    // =================================================
-    // TERMO DERIVATIVO
-    // =================================================
-
-    float derivada = 0.0f;
-
-    if (!primeiroCiclo)
-    {
-        derivada =
-            (erroNormalizado - erroAnterior) / dt;
-    }
-
-    primeiroCiclo = false;
-
-
-    // Limita a derivada antes do filtro
-
-
-    // Filtro passa-baixa
-
-    derivadaAtual =
+    float correcao =
+        kp * erro +
         kd * derivada;
 
+    erroAnterior = erro;
 
-    // =================================================
-    // PID
-    // =================================================
-
-    correcaoAtual =
-        proporcionalAtual
-        +
-        derivadaAtual;
-
-
-    // =================================================
-    // LIMITAÇÃO DA SAÍDA
-    // =================================================
-
-    correcaoAtual =
-        constrain(
-            correcaoAtual,
-            -SAIDA_MAX,
-            SAIDA_MAX
-        );
-
-
-    // Guarda erro para o próximo ciclo
-
-    erroAnterior =
-        erroNormalizado;
-
-
-    return correcaoAtual;
+    return constrain(correcao, -255, 255);
 }
 
-
-float PID::getKp() const
+void PID::reset()
 {
-    return kp;
-}
-
-
-float PID::getKd() const
-{
-    return kd;
-}
-
-
-float PID::getProporcional() const
-{
-    return proporcionalAtual;
-}
-
-
-float PID::getDerivada() const
-{
-    return derivadaAtual;
-}
-
-
-float PID::getCorrecao() const
-{
-    return correcaoAtual;
+    erroAnterior = 0;
 }
