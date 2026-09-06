@@ -54,7 +54,7 @@ float defuzzy::centroide(const valoresFuzzy& regras)
 
         // DIREITA
         float fullCD  = trapmf(pwm, 100, 200, 255, 255);
-        float altoCD  = trimf(pwm, 20, 100, 180);
+        float altoCD  = trimf(pwm, 20, 60, 100);
         float baixoCD = trimf(pwm, 0, 20, 40);
 
         // CENTRO
@@ -62,7 +62,7 @@ float defuzzy::centroide(const valoresFuzzy& regras)
 
         // ESQUERDA
         float baixoCE = trimf(pwm, -40, -20, 0);
-        float altoCE  = trimf(pwm, -180, -100, -20);
+        float altoCE  = trimf(pwm, -100, -60, -20);
         float fullCE  = trapmf(pwm, -255, -255, -200, -100);
 
         mu = max(mu, min(regras.VCD, fullCD));

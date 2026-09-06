@@ -20,11 +20,11 @@ valoresFuzzy fuzzy::funcoes(float erro, float varerro)
     // FUNCOES DE PERTINENCIA - VARIACAO
     // ================================
 
-    VGRN = trapmf(varerro, -1200, -1200, -300, -180);
-    VPQN = trimf(varerro, -300, -180, -60);
-    VZER = trimf(varerro, -100, 0, 100);
-    VPQP = trimf(varerro, 60, 180, 300);
-    VGRP = trapmf(varerro, 180, 300, 1200, 1200);
+    VGRN = trapmf(varerro, -3500, -200, -120, -80);
+    VPQN = trimf(varerro, -80, -40, -0);
+    VZER = trimf(varerro, -20, 0, 20);
+    VPQP = trimf(varerro, 0, 40, 80);
+    VGRP = trapmf(varerro, 80, 120, 200, 3500);
 
 
     // ================================

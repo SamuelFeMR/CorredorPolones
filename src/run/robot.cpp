@@ -105,11 +105,32 @@ void Robot::update()
 
     if (!sensoresRobot.linhaDetectada())
     {
+        // Primeira leitura sem linha
+        if (!linhaPerdida)
+        {
+            linhaPerdida = true;
+            inicioLinhaPerdida = millis();
+
+            Serial.println("LINHA PERDIDA! Mantendo ultimo PWM...");
+        }
+
+        // Continua com o último comando por 500 ms
+        if (millis() - inicioLinhaPerdida < TEMPO_RECUPERACAO_MS)
+        {
+            motorEsquerdo(ultimoPwmEsq);
+            motorDireito(ultimoPwmDir);
+
+            return;
+        }
+
+        // Passou dos 500 ms sem encontrar a linha
         pararMotores();
 
         controladorPID.reset();
 
-        Serial.println("LINHA PERDIDA!");
+        linhaPerdida = false;
+
+        Serial.println("LINHA NAO RECUPERADA! MOTORES PARADOS.");
 
         return;
     }
@@ -220,8 +241,12 @@ void Robot::update()
     // ATUACAO
     // =================================================
 
-    motorEsquerdo(pwmEsq);
+    // Guarda o último comando válido
+    ultimoPwmEsq = pwmEsq;
+    ultimoPwmDir = pwmDir;
 
+    // Aplica aos motores
+    motorEsquerdo(pwmEsq);
     motorDireito(pwmDir);
 
     // 7. ATUALIZA ESTADO

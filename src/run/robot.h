@@ -7,7 +7,7 @@
 #include "control/fuzzy/defuzzy.h"
 #include "control/pid/pid.h"
 
-#define PWM_MAX 210
+#define PWM_MAX 255
 
 class Robot
 {
@@ -31,7 +31,16 @@ private:
         CONTROLE_PID
     };
 
-    static constexpr TipoControle CONTROLE_ATUAL = CONTROLE_PID;
+    static constexpr TipoControle CONTROLE_ATUAL = CONTROLE_FUZZY;
+
+    // RECUPERAÇÃO DE LINHA
+    int ultimoPwmEsq = 0;
+    int ultimoPwmDir = 0;
+
+    bool linhaPerdida = false;
+    unsigned long inicioLinhaPerdida = 0;
+
+    static constexpr unsigned long TEMPO_RECUPERACAO_MS = 500;
 
 
     // CONTROLE
