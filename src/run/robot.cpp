@@ -1,12 +1,13 @@
 #include "robot.h"
 
+
+// =================================================
 // BEGIN
+// =================================================
+
 void Robot::begin()
 {
     Serial.begin(115200);
-
-    // Garantia extra antes de começar
-    pararMotores();
 
     // SENSORES
     sensoresRobot.begin();
@@ -14,22 +15,25 @@ void Robot::begin()
     // MOTORES
     configurarMotores();
 
+    pararMotores();
+
+
+    // =================================================
     // CALIBRACAO
+    // =================================================
+
     Serial.println("Iniciando calibracao...");
 
     giroCalib();
 
     sensoresRobot.calibrate();
 
-    // Garantia extra depois da calibração
     pararMotores();
 
 
-    // INICIALIZACAO DO CONTROLE
-    erroAnterior = 0;
-    primeiroCiclo = true;
-    
-    PID pd(0.05, 0.02);
+    // =================================================
+    // CONTROLE
+    // =================================================
 
     controladorPID.reset();
 
@@ -37,20 +41,33 @@ void Robot::begin()
 }
 
 
+// =================================================
 // UPDATE
+// =================================================
+
 void Robot::update()
 {
-    // 1. LEITURA DOS SENSORES
+    // =================================================
+    // LEITURA DOS SENSORES
+    // =================================================
+
     sensoresRobot.update();
+
 
     if (roboParado)
     {
         pararMotores();
         return;
     }
-    
-    // CONTAGEM DO SENSOR LATERAL DIREITO
-    bool direitaAtual = sensoresRobot.direitaDetected();
+
+
+    // =================================================
+    // SENSOR LATERAL DIREITO
+    // =================================================
+
+    bool direitaAtual =
+        sensoresRobot.direitaDetected();
+
 
     if (direitaAtual && !direitaAnterior)
     {
@@ -59,7 +76,9 @@ void Robot::update()
         Serial.print("DETECCAO DIREITA: ");
         Serial.println(contadorDeteccoesDireita);
 
-        if (contadorDeteccoesDireita == DETECCOES_NECESSARIAS)
+
+        if (contadorDeteccoesDireita ==
+            DETECCOES_NECESSARIAS)
         {
             sensoresRobot.zerarDistancia();
 
@@ -70,26 +89,35 @@ void Robot::update()
         }
     }
 
+
     direitaAnterior = direitaAtual;
+
+
+    // =================================================
+    // CONTAGEM DA DISTANCIA
+    // =================================================
 
     if (contandoDistancia)
     {
-        float distanciaEsq = sensoresRobot.getDistanciaEsqMm();
-        float distanciaDir = sensoresRobot.getDistanciaDirMm();
+        float distanciaEsq =
+            sensoresRobot.getDistanciaEsqMm();
+
+        float distanciaDir =
+            sensoresRobot.getDistanciaDirMm();
+
 
         float distanciaMedia =
             (distanciaEsq + distanciaDir) / 2.0f;
-/*
-        //Serial.print("Distancia apos 10 deteccoes: ");
-        Serial.print(distanciaMedia);
-        Serial.println(" mm");
-*/
-        if (distanciaMedia >= DISTANCIA_POS_DETECCAO_MM)
+
+
+        if (distanciaMedia >=
+            DISTANCIA_POS_DETECCAO_MM)
         {
             pararMotores();
 
             contandoDistancia = false;
             roboParado = true;
+
 
             Serial.println("================================");
             Serial.println("20 CM PERCORRIDOS!");
@@ -100,19 +128,29 @@ void Robot::update()
         }
     }
 
+
+    // =================================================
+    // LINHA PERDIDA
+    // =================================================
+
     if (!sensoresRobot.linhaDetectada())
     {
-        // Primeira leitura sem linha
         if (!linhaPerdida)
         {
             linhaPerdida = true;
-            inicioLinhaPerdida = millis();
 
-            Serial.println("LINHA PERDIDA! Mantendo ultimo PWM...");
+            inicioLinhaPerdida =
+                millis();
+
+            Serial.println(
+                "LINHA PERDIDA! Mantendo ultimo PWM..."
+            );
         }
 
-        // Continua com o último co mando por 500 ms
-        if (millis() - inicioLinhaPerdida < TEMPO_RECUPERACAO_MS)
+
+        // Mantem o ultimo comando
+        if (millis() - inicioLinhaPerdida <
+            TEMPO_RECUPERACAO_MS)
         {
             motorEsquerdo(ultimoPwmEsq);
             motorDireito(ultimoPwmDir);
@@ -120,37 +158,30 @@ void Robot::update()
             return;
         }
 
-        // Passou dos 500 ms sem encontrar a linha
+
+        // Linha nao recuperada
         pararMotores();
 
         controladorPID.reset();
 
-        linhaPerdida = false;
-
-        Serial.println("LINHA NAO RECUPERADA! MOTORES PARADOS.");
+        Serial.println(
+            "LINHA NAO RECUPERADA! MOTORES PARADOS."
+        );
 
         return;
     }
 
-    float velocidadeEsq = sensoresRobot.getVelocidadeEsq();
-    float velocidadeDir = sensoresRobot.getVelocidadeDir();
 
-    // 2. CALCULO DO ERRO
-    int erroAtual = sensoresRobot.calculaErro();
+    // Linha encontrada novamente
+    linhaPerdida = false;
 
 
-    // 3. CALCULO DA VARIACAO DO ERRO
-    int varErro = 0;
+    // =================================================
+    // CALCULO DO ERRO
+    // =================================================
 
-    if (primeiroCiclo)
-    {
-        varErro = 0;
-        primeiroCiclo = false;
-    }
-    else
-    {
-        varErro = erroAtual - erroAnterior;
-    }
+    int erroAtual =
+        sensoresRobot.calculaErro();
 
 
     // =================================================
@@ -163,22 +194,34 @@ void Robot::update()
     int pwmDir = 0;
 
 
-    // -------------------------------------------------
+    // =================================================
     // FUZZY
-    // -------------------------------------------------
+    // =================================================
 
     if (CONTROLE_ATUAL == CONTROLE_FUZZY)
     {
+        // O fuzzy precisa da variacao do erro.
+        static int erroAnteriorFuzzy = 0;
+
+        int varErro =
+            erroAtual - erroAnteriorFuzzy;
+
+        erroAnteriorFuzzy =
+            erroAtual;
+
+
         valoresFuzzy regras =
             controladorFuzzy.funcoes(
                 erroAtual,
                 varErro
             );
 
+
         controladorDefuzzy.calcularPWM(
             regras,
             PWM_BASE
         );
+
 
         pwmEsq =
             controladorDefuzzy.pwmEsq;
@@ -191,9 +234,9 @@ void Robot::update()
     }
 
 
-    // -------------------------------------------------
-    // PID
-    // -------------------------------------------------
+    // =================================================
+    // PD
+    // =================================================
 
     else if (CONTROLE_ATUAL == CONTROLE_PID)
     {
@@ -202,15 +245,16 @@ void Robot::update()
                 erroAtual
             );
 
-        // Mistura diferencial
+
+        // Correcao positiva:
         //
-        // correção positiva:
-        // motor esquerdo aumenta
-        // motor direito diminui
+        // Esquerdo aumenta
+        // Direito diminui
         //
-        // correção negativa:
-        // motor direito aumenta
-        // motor esquerdo diminui
+        // Correcao negativa:
+        //
+        // Esquerdo diminui
+        // Direito aumenta
 
         pwmEsq =
             PWM_BASE + correcao;
@@ -218,12 +262,14 @@ void Robot::update()
         pwmDir =
             PWM_BASE - correcao;
 
+
         pwmEsq =
             constrain(
                 pwmEsq,
                 0,
                 PWM_MAX
             );
+
 
         pwmDir =
             constrain(
@@ -238,27 +284,38 @@ void Robot::update()
     // ATUACAO
     // =================================================
 
-    // Aplica aos motores
     motorEsquerdo(pwmEsq);
     motorDireito(pwmDir);
 
-    // 7. ATUALIZA ESTADO
-    erroAnterior = erroAtual;
+
+    // Guarda o ultimo PWM
+    // para recuperacao da linha
+
+    ultimoPwmEsq = pwmEsq;
+    ultimoPwmDir = pwmDir;
 
 
-    // DEBUG DOS SENSORES
-    if (millis() - ultimoDebug >= INTERVALO_DEBUG_MS)
+    // =================================================
+    // DEBUG
+    // =================================================
+
+    if (millis() - ultimoDebug >=
+        INTERVALO_DEBUG_MS)
     {
         ultimoDebug = millis();
+
 
         const uint16_t* valores =
             sensoresRobot.getValues();
 
+
         Serial.print("SENSORES: ");
+
 
         for (int i = 0; i < NUM_SENSORS; i++)
         {
             Serial.print(valores[i]);
+
 
             if (i < NUM_SENSORS - 1)
             {
@@ -266,17 +323,18 @@ void Robot::update()
             }
         }
 
+
         Serial.print(" || Erro: ");
         Serial.print(erroAtual);
 
-        Serial.print(" | dErro: ");
-        Serial.print(varErro);
 
         Serial.print(" | Correcao: ");
         Serial.print(correcao);
 
+
         Serial.print(" | PWM Esq: ");
         Serial.print(pwmEsq);
+
 
         Serial.print(" | PWM Dir: ");
         Serial.println(pwmDir);
@@ -284,16 +342,21 @@ void Robot::update()
 }
 
 
+// =================================================
 // CONFIGURACAO DOS MOTORES
+// =================================================
+
 void Robot::configurarMotores()
 {
-    // Direcao motor esquerdo
+    // Motor esquerdo
     pinMode(AIN1, OUTPUT);
     pinMode(AIN2, OUTPUT);
 
-    // Direcao motor direito
+
+    // Motor direito
     pinMode(BIN1, OUTPUT);
     pinMode(BIN2, OUTPUT);
+
 
     // PWM
     ledcSetup(
@@ -301,6 +364,7 @@ void Robot::configurarMotores()
         PWM_FREQ,
         PWM_RES
     );
+
 
     ledcSetup(
         PWM_CHANNEL_B,
@@ -314,22 +378,28 @@ void Robot::configurarMotores()
         PWM_CHANNEL_A
     );
 
+
     ledcAttachPin(
         PWMB,
         PWM_CHANNEL_B
     );
 
-    // Sentido inicial
+
+    // Sentido para frente
     digitalWrite(AIN1, HIGH);
     digitalWrite(AIN2, LOW);
+
 
     digitalWrite(BIN1, HIGH);
     digitalWrite(BIN2, LOW);
 
+
+    // Comeca parado
     ledcWrite(
         PWM_CHANNEL_A,
         0
     );
+
 
     ledcWrite(
         PWM_CHANNEL_B,
@@ -337,21 +407,26 @@ void Robot::configurarMotores()
     );
 }
 
+
+// =================================================
 // MOTOR ESQUERDO
+// =================================================
+
 void Robot::motorEsquerdo(int pwm)
 {
-    pwm = constrain(
-        pwm,
-        0,
-        255
-    );
+    pwm =
+        constrain(
+            pwm,
+            0,
+            PWM_MAX
+        );
 
 
-    // Frente
     digitalWrite(
         AIN1,
         HIGH
     );
+
 
     digitalWrite(
         AIN2,
@@ -365,21 +440,26 @@ void Robot::motorEsquerdo(int pwm)
     );
 }
 
+
+// =================================================
 // MOTOR DIREITO
+// =================================================
+
 void Robot::motorDireito(int pwm)
 {
-    pwm = constrain(
-        pwm,
-        0,
-        255
-    );
+    pwm =
+        constrain(
+            pwm,
+            0,
+            PWM_MAX
+        );
 
 
-    // Frente
     digitalWrite(
         BIN1,
         HIGH
     );
+
 
     digitalWrite(
         BIN2,
@@ -393,36 +473,78 @@ void Robot::motorDireito(int pwm)
     );
 }
 
-// PARAR MOTORES
+
+// =================================================
+// GIRO DE CALIBRACAO
+// =================================================
+
 void Robot::giroCalib()
 {
-    digitalWrite(AIN1,LOW);
-    digitalWrite(AIN2,LOW);
+    digitalWrite(
+        AIN1,
+        LOW
+    );
+
+    digitalWrite(
+        AIN2,
+        LOW
+    );
+
     ledcWrite(
         PWM_CHANNEL_A,
         180
     );
 
-    digitalWrite(BIN1,LOW);
-    digitalWrite(BIN2,LOW);
+
+    digitalWrite(
+        BIN1,
+        LOW
+    );
+
+    digitalWrite(
+        BIN2,
+        LOW
+    );
+
     ledcWrite(
         PWM_CHANNEL_B,
         180
     );
 }
 
+
+// =================================================
 // PARAR MOTORES
+// =================================================
+
 void Robot::pararMotores()
 {
-    digitalWrite(AIN1,HIGH);
-    digitalWrite(AIN2,HIGH);
+    digitalWrite(
+        AIN1,
+        HIGH
+    );
+
+    digitalWrite(
+        AIN2,
+        HIGH
+    );
+
     ledcWrite(
         PWM_CHANNEL_A,
         0
     );
 
-    digitalWrite(BIN1,HIGH);
-    digitalWrite(BIN2,HIGH);
+
+    digitalWrite(
+        BIN1,
+        HIGH
+    );
+
+    digitalWrite(
+        BIN2,
+        HIGH
+    );
+
     ledcWrite(
         PWM_CHANNEL_B,
         0
