@@ -35,10 +35,10 @@ private:
     int erroAnterior = 0;
     bool primeiroCiclo = true;
 
-    static constexpr float PWM_BASE = 160.0f;
+    static constexpr float PWM_BASE = 150.0f;
 
     static constexpr float PID_KP = 60.0f;
-    static constexpr float PID_KD = 80.0f;
+    static constexpr float PID_KD = 0.0f;
 
     static constexpr unsigned long INTERVALO_DEBUG_MS = 100;
     unsigned long ultimoDebug = 0;
