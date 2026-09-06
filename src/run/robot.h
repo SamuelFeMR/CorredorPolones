@@ -19,15 +19,15 @@ private:
     fuzzy controladorFuzzy;
     defuzzy controladorDefuzzy;
 
-    PID controladorPD;
+    PID controladorPID;
 
     enum TipoControle
     {
         CONTROLE_FUZZY,
-        CONTROLE_PD
+        CONTROLE_PID
     };
 
-    static constexpr TipoControle CONTROLE_ATUAL = CONTROLE_PD;
+    static constexpr TipoControle CONTROLE_ATUAL = CONTROLE_PID;
 
 
     // CONTROLE
@@ -36,8 +36,8 @@ private:
 
     static constexpr float PWM_BASE = 160.0f;
 
-    static constexpr float PD_KP = 180.0f;
-    static constexpr float PD_KD = 8.0f;
+    static constexpr float PID_KP = 180.0f;
+    static constexpr float PID_KD = 8.0f;
 
     static constexpr unsigned long INTERVALO_DEBUG_MS = 100;
     unsigned long ultimoDebug = 0;
