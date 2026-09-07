@@ -26,7 +26,7 @@ void Robot::begin()
 
     giroCalib();
 
-    sensoresRobot.calibrate();
+    sensoresRobot.calibrate(TEMPO_CALIBRACAO);
 
     pararMotores();
 
@@ -111,7 +111,7 @@ void Robot::update()
 
 
     // =================================================
-    // CONTAGEM DA DISTANCIA
+    // CONTAGEM
     // =================================================
 
     if (contandoParada)

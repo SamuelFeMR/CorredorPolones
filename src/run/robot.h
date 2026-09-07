@@ -59,10 +59,10 @@ private:
     // CONTROLE
     // =================================================
 
-    static constexpr float PWM_BASE = 200.0f;
+    static constexpr float PWM_BASE = 150.0f;
 
-    static constexpr float PID_KP = 0.11f;
-    static constexpr float PID_KD = 0.4f;
+    static constexpr float PID_KP = 0.062f;
+    static constexpr float PID_KD = 0.3f;
 
     //Funcionou com 150 0.058 0.1
     //Funcionou com 180 0.078 0.2
@@ -75,6 +75,7 @@ private:
 
     unsigned long ultimoDebug = 0;
 
+    const unsigned long TEMPO_CALIBRACAO = 5000;
 
     // ================================================= 
     // MOTOR ESQUERDO
@@ -128,13 +129,13 @@ private:
     bool contandoParada = false;
     bool roboParado = false;
 
-    static constexpr int DETECCOES_NECESSARIAS = 6;
+    static constexpr int DETECCOES_NECESSARIAS = 7;
 
     unsigned long inicioContagemParada = 0;
-    static constexpr unsigned long TEMPO_ATE_PARADA_MS = 2000;
+    static constexpr unsigned long TEMPO_ATE_PARADA_MS = 3000;
     
     unsigned long inicioPista = 0;
     bool pistaIniciada = false;
 
-    static constexpr unsigned long TEMPO_PISTA_MS = 40000;
+    static constexpr unsigned long TEMPO_PISTA_MS = 29000;
 };

@@ -20,7 +20,7 @@ class sensores
 {
 public:
     void begin();
-    void calibrate();
+    void calibrate(unsigned long TEMPO_CALIBRACAO = 5000);
 
     void update();
     bool direitaDetected() const;

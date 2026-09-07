@@ -93,7 +93,7 @@ void sensores::begin()
     );
 }
 
-void sensores::calibrate()
+void sensores::calibrate(unsigned long TEMPO_CALIBRACAO)
 {
 
     Serial.println();
@@ -101,7 +101,6 @@ void sensores::calibrate()
     Serial.println("ROBO GIRANDO PARA CALIBRACAO...");
     Serial.println("==============================");
 
-    const unsigned long TEMPO_CALIBRACAO = 3000;
     const unsigned long inicio = millis();
 
     while (millis() - inicio < TEMPO_CALIBRACAO)
