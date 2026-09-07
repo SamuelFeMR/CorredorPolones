@@ -4,8 +4,8 @@
 #include <QTRSensors.h>
 
 #define NUM_SENSORS 8
-#define SensorDireita 26
-#define SensorEsquerda 2
+#define SensorDireita 2
+#define SensorEsquerda 36
 
 #define esqC1 23
 #define esqC2 21
@@ -25,6 +25,14 @@ public:
     void update();
     bool direitaDetected() const;
     bool esquerdaDetected() const;
+    int getLeituraDireita() const;
+    int getLeituraEsquerda() const;
+
+    int getMinDireita() const;
+    int getMaxDireita() const;
+
+    int getMinEsquerda() const;
+    int getMaxEsquerda() const;
 
     bool linhaDetectada() const;
     

@@ -59,11 +59,13 @@ private:
     // CONTROLE
     // =================================================
 
-    static constexpr float PWM_BASE = 180.0f;
+    static constexpr float PWM_BASE = 200.0f;
 
-    static constexpr float PID_KP = 0.062f;
-    static constexpr float PID_KD = 0.04f;
+    static constexpr float PID_KP = 0.11f;
+    static constexpr float PID_KD = 0.4f;
 
+    //Funcionou com 150 0.058 0.1
+    //Funcionou com 180 0.078 0.2
 
     // =================================================
     // DEBUG
@@ -123,10 +125,16 @@ private:
     int contadorDeteccoesDireita = 0;
 
     bool direitaAnterior = false;
-    bool contandoDistancia = false;
+    bool contandoParada = false;
     bool roboParado = false;
 
-    static constexpr int DETECCOES_NECESSARIAS = 10;
+    static constexpr int DETECCOES_NECESSARIAS = 6;
 
-    static constexpr float DISTANCIA_POS_DETECCAO_MM = 200.0f;
+    unsigned long inicioContagemParada = 0;
+    static constexpr unsigned long TEMPO_ATE_PARADA_MS = 2000;
+    
+    unsigned long inicioPista = 0;
+    bool pistaIniciada = false;
+
+    static constexpr unsigned long TEMPO_PISTA_MS = 40000;
 };

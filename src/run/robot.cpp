@@ -38,6 +38,8 @@ void Robot::begin()
     controladorPID.reset();
 
     Serial.println("Robot pronto!");
+    inicioPista = millis();
+    pistaIniciada = true;
 }
 
 
@@ -52,6 +54,21 @@ void Robot::update()
     // =================================================
 
     sensoresRobot.update();
+
+    if (pistaIniciada && millis() - inicioPista >= TEMPO_PISTA_MS)
+    {
+        pararMotores();
+
+        roboParado = true;
+        pistaIniciada = false;
+
+        Serial.println("================================");
+        Serial.println("40 SEGUNDOS DE PISTA!");
+        Serial.println("ROBO PARADO!");
+        Serial.println("================================");
+
+        return;
+    }
 
 
     if (roboParado)
@@ -80,12 +97,12 @@ void Robot::update()
         if (contadorDeteccoesDireita ==
             DETECCOES_NECESSARIAS)
         {
-            sensoresRobot.zerarDistancia();
+            inicioContagemParada = millis();
 
-            contandoDistancia = true;
+            contandoParada = true; 
 
-            Serial.println("10 DETECCOES!");
-            Serial.println("INICIANDO CONTAGEM DOS 20 CM");
+            Serial.println("DETECCOES!");
+            Serial.println("INICIANDO CONTAGEM PARA PARADA");
         }
     }
 
@@ -97,32 +114,17 @@ void Robot::update()
     // CONTAGEM DA DISTANCIA
     // =================================================
 
-    if (contandoDistancia)
+    if (contandoParada)
     {
-        float distanciaEsq =
-            sensoresRobot.getDistanciaEsqMm();
-
-        float distanciaDir =
-            sensoresRobot.getDistanciaDirMm();
-
-
-        float distanciaMedia =
-            (distanciaEsq + distanciaDir) / 2.0f;
-
-
-        if (distanciaMedia >=
-            DISTANCIA_POS_DETECCAO_MM)
+        if (millis() - inicioContagemParada >=
+            TEMPO_ATE_PARADA_MS)
         {
             pararMotores();
 
-            contandoDistancia = false;
+            contandoParada = false;
             roboParado = true;
 
-
-            Serial.println("================================");
-            Serial.println("20 CM PERCORRIDOS!");
             Serial.println("ROBO PARADO!");
-            Serial.println("================================");
 
             return;
         }
@@ -337,7 +339,44 @@ void Robot::update()
 
 
         Serial.print(" | PWM Dir: ");
-        Serial.println(pwmDir);
+        Serial.print(pwmDir);
+
+
+        // =================================================
+        // DEBUG SENSORES LATERAIS
+        // =================================================
+
+        Serial.print(" || LATERAIS | ");
+
+        Serial.print("D: ");
+        Serial.print(sensoresRobot.getLeituraDireita());
+
+        Serial.print(" [");
+        Serial.print(sensoresRobot.getMinDireita());
+        Serial.print("-");
+        Serial.print(sensoresRobot.getMaxDireita());
+        Serial.print("] ");
+
+        Serial.print(
+            sensoresRobot.direitaDetected()
+                ? "DETECTOU"
+                : "NAO"
+        );
+
+        Serial.print(" | E: ");
+        Serial.print(sensoresRobot.getLeituraEsquerda());
+
+        Serial.print(" [");
+        Serial.print(sensoresRobot.getMinEsquerda());
+        Serial.print("-");
+        Serial.print(sensoresRobot.getMaxEsquerda());
+        Serial.print("] ");
+
+        Serial.println(
+            sensoresRobot.esquerdaDetected()
+                ? "DETECTOU"
+                : "NAO"
+        );
     }
 }
 

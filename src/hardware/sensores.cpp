@@ -114,6 +114,7 @@ void sensores::calibrate()
         // -------------------------------
 
         int direita = analogRead(SensorDireita);
+        sensoresLaterais[0] = direita;
 
         thersholdDirMin = min(
             thersholdDirMin,
@@ -131,6 +132,7 @@ void sensores::calibrate()
         // -------------------------------
 
         int esquerda = analogRead(SensorEsquerda);
+        sensoresLaterais[1] = esquerda;
 
         thersholdEsqMin = min(
             thersholdEsqMin,
@@ -230,7 +232,7 @@ void sensores::update()
             (leituraDireita - thersholdDirMin) * 1000.0f /
             (thersholdDirMax - thersholdDirMin);
 
-        detectDireita = normalizado < 500.0f;
+        detectDireita = normalizado < 800.0f;
     }
     else
     {
@@ -252,7 +254,7 @@ void sensores::update()
             (leituraEsquerda - thersholdEsqMin) * 1000.0f /
             (thersholdEsqMax - thersholdEsqMin);
 
-        detectEsquerda = normalizado < 500.0f;
+        detectEsquerda = normalizado < 800.0f;
     }
     else 
     {
@@ -348,4 +350,34 @@ void sensores::zerarDistancia()
     pulsosDistanciaDir = 0;
 
     interrupts();
+}
+
+int sensores::getLeituraDireita() const
+{
+    return sensoresLaterais[0];
+}
+
+int sensores::getLeituraEsquerda() const
+{
+    return sensoresLaterais[1];
+}
+
+int sensores::getMinDireita() const
+{
+    return thersholdDirMin;
+}
+
+int sensores::getMaxDireita() const
+{
+    return thersholdDirMax;
+}
+
+int sensores::getMinEsquerda() const
+{
+    return thersholdEsqMin;
+}
+
+int sensores::getMaxEsquerda() const
+{
+    return thersholdEsqMax;
 }
