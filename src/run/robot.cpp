@@ -55,18 +55,9 @@ void Robot::update()
 
     sensoresRobot.update();
 
-    if (pistaIniciada && millis() - inicioPista >= TEMPO_PISTA_MS)
+    if (roboParado)
     {
         pararMotores();
-
-        roboParado = true;
-        pistaIniciada = false;
-
-        Serial.println("================================");
-        Serial.println("40 SEGUNDOS DE PISTA!");
-        Serial.println("ROBO PARADO!");
-        Serial.println("================================");
-
         return;
     }
 
@@ -82,33 +73,31 @@ void Robot::update()
     // SENSOR LATERAL DIREITO
     // =================================================
 
-    bool direitaAtual =
-        sensoresRobot.direitaDetected();
+    bool direitaAtual = sensoresRobot.direitaDetected();
 
-
-    if (direitaAtual && !direitaAnterior)
+    if (!contandoParada &&
+        !roboParado &&
+        pistaIniciada &&
+        (millis() - inicioPista >= TEMPO_PISTA_MS) &&
+        direitaAtual &&
+        !direitaAnterior)
     {
-        contadorDeteccoesDireita++;
+        deteccoesDireita++;
 
-        Serial.print("DETECCAO DIREITA: ");
-        Serial.println(contadorDeteccoesDireita);
+        Serial.print("DETECCAO DIREITA #");
+        Serial.println(deteccoesDireita);
 
-
-        if (contadorDeteccoesDireita ==
-            DETECCOES_NECESSARIAS)
+        // Só começa a contagem para parada na 3ª detecção
+        if (deteccoesDireita >= DETECCOES_NECESSARIAS)
         {
             inicioContagemParada = millis();
+            contandoParada = true;
 
-            contandoParada = true; 
-
-            Serial.println("DETECCOES!");
-            Serial.println("INICIANDO CONTAGEM PARA PARADA");
+            Serial.println("3 DETECCOES! INICIANDO CONTAGEM PARA PARADA");
         }
     }
 
-
     direitaAnterior = direitaAtual;
-
 
     // =================================================
     // CONTAGEM
@@ -123,6 +112,7 @@ void Robot::update()
 
             contandoParada = false;
             roboParado = true;
+            pistaIniciada = false;
 
             Serial.println("ROBO PARADO!");
 

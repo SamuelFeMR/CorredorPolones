@@ -61,7 +61,7 @@ private:
 
     static constexpr float PWM_BASE = 150.0f;
 
-    static constexpr float PID_KP = 0.062f;
+    static constexpr float PID_KP = 0.06f;
     static constexpr float PID_KD = 0.3f;
 
     //Funcionou com 150 0.058 0.1
@@ -129,13 +129,15 @@ private:
     bool contandoParada = false;
     bool roboParado = false;
 
-    static constexpr int DETECCOES_NECESSARIAS = 7;
+    ;
 
     unsigned long inicioContagemParada = 0;
-    static constexpr unsigned long TEMPO_ATE_PARADA_MS = 3000;
+    static constexpr unsigned long TEMPO_ATE_PARADA_MS = 600;
     
     unsigned long inicioPista = 0;
     bool pistaIniciada = false;
 
-    static constexpr unsigned long TEMPO_PISTA_MS = 29000;
+    int deteccoesDireita = 0;
+    static constexpr int DETECCOES_NECESSARIAS = 3;
+    static constexpr unsigned long TEMPO_PISTA_MS = 16000;
 };
